@@ -1,155 +1,26 @@
 {
   "project_info": {
-    "project_number": "377007798374",
-    "project_id": "cityloads-301009",
-    "storage_bucket": "cityloads-301009.appspot.com"
+    "project_number": "924544352485",
+    "project_id": "h3devsss",
+    "storage_bucket": "h3devsss.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:377007798374:android:c48d1d095ccc71381095a7",
-        "android_client_info": {
-          "package_name": "com.cityloads.app"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "377007798374-5kllqrokb99b01mp61vtafa3mtsldpac.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.cityloads.app",
-            "certificate_hash": "086b99d262427d2bd0a0a411e70629c5d86e312a"
-          }
-        },
-        {
-          "client_id": "377007798374-edo25u1fsdh4nprt82s6kl1td795gf8j.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.cityloads.app",
-            "certificate_hash": "69893a52f0e8caf073cf3b2d016565549fe9f1e4"
-          }
-        },
-        {
-          "client_id": "377007798374-mqo5gll8geulj7mpu310okss7hikni8p.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.cityloads.app",
-            "certificate_hash": "553a1a0e9cd1081cfaddf505070338d7410522f5"
-          }
-        },
-        {
-          "client_id": "377007798374-p9kkks49ieh9p9lergjv5rnlba8g9dp3.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.cityloads.app",
-            "certificate_hash": "c64e7e7f2ae285b888841c290aa38f2677e24113"
-          }
-        },
-        {
-          "client_id": "377007798374-uqtkbf4o1mr96ttmmkaj9a2vo4tbolk0.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.cityloads.app",
-            "certificate_hash": "62c82b36525540510a615ac99aca4a84835fd87d"
-          }
-        },
-        {
-          "client_id": "377007798374-39e4ohlgbh98n3r8uhse9msh0ukj8lpa.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCzstL4Uag6Uu-KJtoo8ZQmx-okRFyvHfE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "377007798374-39e4ohlgbh98n3r8uhse9msh0ukj8lpa.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "377007798374-1u49jejetbqest41dnnjcj7most7d19a.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.cityLoads"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:377007798374:android:dc0d4ba5f2e2e0821095a7",
+        "mobilesdk_app_id": "1:924544352485:android:29907cf360b7869ffc940c",
         "android_client_info": {
           "package_name": "com.example.h3devs"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "377007798374-39e4ohlgbh98n3r8uhse9msh0ukj8lpa.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCzstL4Uag6Uu-KJtoo8ZQmx-okRFyvHfE"
+          "current_key": "AIzaSyCHdAnHkDfqPggfw9AdUxeJBRmw1gI1AJ4"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "377007798374-39e4ohlgbh98n3r8uhse9msh0ukj8lpa.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "377007798374-1u49jejetbqest41dnnjcj7most7d19a.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.cityLoads"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:377007798374:android:c534373e7d8686c61095a7",
-        "android_client_info": {
-          "package_name": "com.mlab817.city_loads"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "377007798374-39e4ohlgbh98n3r8uhse9msh0ukj8lpa.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCzstL4Uag6Uu-KJtoo8ZQmx-okRFyvHfE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "377007798374-39e4ohlgbh98n3r8uhse9msh0ukj8lpa.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "377007798374-1u49jejetbqest41dnnjcj7most7d19a.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.cityLoads"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

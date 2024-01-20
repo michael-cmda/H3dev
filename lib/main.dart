@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:h3devs/firebase_options.dart';
+import 'package:h3devs/homePage/homepage.dart';
 import 'package:h3devs/search/search.dart';
 
 void main() async {
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Search(),
+      home: MyHomePage(),
     );
   }
 }

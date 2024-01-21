@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:h3devs/discover/discover.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
@@ -67,7 +68,10 @@ class MyHomePage extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const Discover()));
+                    },
                     child: const ListTile(
                       title: Text('Search'),
                       leading: Icon(Icons.search),

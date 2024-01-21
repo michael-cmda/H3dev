@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:h3devs/discover/discover.dart';
+import 'package:h3devs/messages/messages.dart';
+import 'package:h3devs/search/searchDrawer.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
+  void openSearchDrawer(BuildContext context) {
+    Scaffold.of(context).openDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const SearchDrawer(),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Row(
           children: [
-            Image.asset('assets/images/logo.jpg', height: 30.0, width: 30.0),
+            Image.asset('assets/images/logo.png', height: 30.0, width: 30.0),
             const SizedBox(width: 8.0),
             const Text('CITY LOADS'),
           ],
@@ -31,115 +38,124 @@ class MyHomePage extends StatelessWidget {
             margin: const EdgeInsets.only(right: 16.0),
             child: IconButton(
               icon: const CircleAvatar(
-                backgroundImage: AssetImage('assets/images/ChaHae.jpg'),
+                backgroundImage: AssetImage('assets/images/user.jpg'),
               ),
               onPressed: () {},
             ),
           ),
         ],
       ),
-      body: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20.0),
-          bottomLeft: Radius.circular(20.0),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 200.0,
-              color: Colors.white,
-              padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16.0),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const HomeRoute(),
+      body: Builder(
+        builder: (context) {
+          return ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20.0),
+              bottomLeft: Radius.circular(20.0),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 200.0,
+                  color: Colors.white,
+                  padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 16.0),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const HomeRoute(),
+                            ),
+                          );
+                        },
+                        child: const ListTile(
+                          title: Text('Home'),
+                          leading: Icon(Icons.home),
                         ),
-                      );
-                    },
-                    child: const ListTile(
-                      title: Text('Home'),
-                      leading: Icon(Icons.home),
-                    ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          openSearchDrawer(context);
+                        },
+                        child: const ListTile(
+                          title: Text('Search'),
+                          leading: Icon(Icons.search),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const ListTile(
+                          title: Text('Discover'),
+                          leading: Icon(Icons.explore),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const ListTile(
+                          title: Text('Latest News'),
+                          leading: Icon(Icons.new_releases),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const ListTile(
+                          title: Text('Create a Post'),
+                          leading: Icon(Icons.edit),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const ListTile(
+                          title: Text('Notification'),
+                          leading: Icon(Icons.notifications),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Messages()),
+                          );
+                        },
+                        child: const ListTile(
+                          title: Text('Messages'),
+                          leading: Icon(Icons.message),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const ListTile(
+                          title: Text('Profile'),
+                          leading: Icon(Icons.person),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const ListTile(
+                          title: Text('Settings'),
+                          leading: Icon(Icons.settings),
+                        ),
+                      ),
+                    ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => const Discover()));
-                    },
-                    child: const ListTile(
-                      title: Text('Search'),
-                      leading: Icon(Icons.search),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const ListTile(
-                      title: Text('Discover'),
-                      leading: Icon(Icons.explore),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const ListTile(
-                      title: Text('Latest News'),
-                      leading: Icon(Icons.new_releases),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const ListTile(
-                      title: Text('Create a Post'),
-                      leading: Icon(Icons.edit),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const ListTile(
-                      title: Text('Notification'),
-                      leading: Icon(Icons.notifications),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const ListTile(
-                      title: Text('Messages'),
-                      leading: Icon(Icons.message),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const ListTile(
-                      title: Text('Profile'),
-                      leading: Icon(Icons.person),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const ListTile(
-                      title: Text('Settings'),
-                      leading: Icon(Icons.settings),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                color: Colors.grey[200],
-                padding: const EdgeInsets.all(16.0),
-                child: const Center(
-                  child: Text('THIS IS HOME PAGE'),
                 ),
-              ),
+                Expanded(
+                  child: Container(
+                    color: Colors.grey[200],
+                    padding: const EdgeInsets.all(16.0),
+                    child: const Center(
+                      child: Text('THIS IS HOME PAGE'),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

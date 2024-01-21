@@ -117,8 +117,7 @@ class MyHomePage extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => const Messages()),
+                            MaterialPageRoute(builder: (context) => const Messages()),
                           );
                         },
                         child: const ListTile(

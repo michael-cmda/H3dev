@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class Messages extends StatefulWidget {
   const Messages({super.key});
@@ -68,7 +69,46 @@ class _MessagesState extends State<Messages> {
           Expanded(
             flex: 5,
             child: selectedContact == null
-                ? const Center(child: Text('Select a contact to chat'))
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/speech_bubble.png',
+                          height: 80,
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Your messages',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Tap here to start a new message',
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 14.0,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor:
+                                const Color.fromARGB(255, 49, 52, 76),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            minimumSize: const Size(250, 50),
+                          ),
+                          child: const Text('Send Message'),
+                        )
+                      ],
+                    ),
+                  )
                 : ListView.builder(
                     itemCount: messages.length,
                     itemBuilder: (context, index) {

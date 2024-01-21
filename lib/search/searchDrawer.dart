@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class SearchDrawer extends StatelessWidget {
-  // Make it stateless since it doesn't need internal state
   const SearchDrawer({super.key});
 
   @override
@@ -31,9 +30,7 @@ class SearchDrawer extends StatelessWidget {
           labelText: 'Search',
           prefixIcon: Icon(Icons.search),
         ),
-        onChanged: (searchQuery) {
-          // Implement search query handling here
-        },
+        onChanged: (searchQuery) {},
       ),
     );
   }

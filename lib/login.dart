@@ -99,41 +99,43 @@ class _LoginState extends State<Login> {
                                             100, // Adjust the width as needed
                                       ),
                                       const SizedBox(height: 30),
-                                  Center(
-  child: RichText(
-    textAlign: TextAlign.left,
-    text: TextSpan(
-      style: GoogleFonts.ubuntu( // Use the Google Fonts style
-        color: Color(0xFF0D47A1),
-        fontSize: 25,
-      ),
-      children: [
-        TextSpan(
-          text: 'CITY ',
-        ),
-        TextSpan(
-          text: 'LOADS',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    ),
-  ),
-),
+                                      Center(
+                                        child: RichText(
+                                          textAlign: TextAlign.left,
+                                          text: TextSpan(
+                                            style: GoogleFonts.ubuntu(
+                                              // Use the Google Fonts style
+                                              color: Color(0xFF0D47A1),
+                                              fontSize: 25,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text: 'CITY ',
+                                              ),
+                                              TextSpan(
+                                                text: 'LOADS',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
 
-Center(
-  child: Text(
-    'Worlds Properties',
-    style: GoogleFonts.ubuntu( // Use the Google Fonts style
-      color: Color(0xFF0D47A1),
-      fontSize: 20,
-      letterSpacing: 3.0,
-      fontWeight: FontWeight.bold,
-    ),
-    textAlign: TextAlign.left,
-  ),
-),
+                                      Center(
+                                        child: Text(
+                                          'Worlds Properties',
+                                          style: GoogleFonts.ubuntu(
+                                            // Use the Google Fonts style
+                                            color: Color(0xFF0D47A1),
+                                            fontSize: 20,
+                                            letterSpacing: 3.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ),
                                       const SizedBox(height: 20),
                                       TextField(
                                         controller: usernameController,
@@ -216,15 +218,17 @@ Center(
                                           ),
                                         ),
                                         child: Text(
-    'Sign in',
-    style: GoogleFonts.ubuntu( // Use the Google Fonts style
-      color: Color.fromARGB(255, 255, 255, 255),
-      fontSize: 20,
-      letterSpacing: 3.0,
-      fontWeight: FontWeight.bold,
-    ),
-    textAlign: TextAlign.left,
-  ),
+                                          'Sign in',
+                                          style: GoogleFonts.ubuntu(
+                                            // Use the Google Fonts style
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255),
+                                            fontSize: 20,
+                                            letterSpacing: 3.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
                                       ),
                                       const SizedBox(height: 20),
                                       Row(

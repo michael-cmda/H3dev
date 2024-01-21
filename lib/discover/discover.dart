@@ -6,7 +6,7 @@ class Discover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Material App',
+      title: 'Discover',
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Discover'),

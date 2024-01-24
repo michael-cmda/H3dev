@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class Messages extends StatefulWidget {
-  const Messages({super.key});
+  const Messages({Key? key}) : super(key: key);
 
   @override
   _MessagesState createState() => _MessagesState();
@@ -23,103 +22,103 @@ class _MessagesState extends State<Messages> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Row(
+    return Material(
+      child: Row(
         children: [
           Expanded(
             flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(20.0),
-                  child: const Text(
-                    'Messages',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        right: BorderSide(
-                          color: Color.fromARGB(255, 228, 228, 228),
-                          width: 2.5,
-                        ),
-                      ),
-                    ),
-                    child: ListView.builder(
-                      itemCount: contacts.length,
-                      itemBuilder: (context, index) {
-                        final contact = contacts[index];
-                        return ContactTile(
-                          contact: contact,
-                          isSelected: contact == selectedContact,
-                          onTap: () =>
-                              setState(() => selectedContact = contact),
-                        );
-                      },
-                    ),
-                  ),
-                )
-              ],
-            ),
+            child: _buildContactsSection(),
+          ),
+          const VerticalDivider(
+            width: 2.5,
+            thickness: 2.5,
+            color: Color.fromARGB(255, 228, 228, 228),
           ),
           Expanded(
             flex: 5,
-            child: selectedContact == null
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/speech_bubble.png',
-                          height: 80,
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Your messages',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Tap here to start a new message',
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: 14.0,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor:
-                                const Color.fromARGB(255, 49, 52, 76),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            minimumSize: const Size(250, 50),
-                          ),
-                          child: const Text('Send Message'),
-                        )
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      final message = messages[index];
-                      return MessageBubble(message: message);
-                    },
-                  ),
+            child: _buildMessagesSection(),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildContactsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(20.0),
+          child: const Text(
+            'Messages',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: contacts.length,
+            itemBuilder: (context, index) {
+              final contact = contacts[index];
+              return ContactTile(
+                contact: contact,
+                isSelected: contact == selectedContact,
+                onTap: () => setState(() => selectedContact = contact),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMessagesSection() {
+    return selectedContact == null
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/speech_bubble.png',
+                  height: 80,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Your messages',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Tap here to start a new message',
+                  style: TextStyle(
+                    color: Colors.grey[500],
+                    fontSize: 14.0,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color.fromARGB(255, 49, 52, 76),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    minimumSize: const Size(250, 50),
+                  ),
+                  child: const Text('Send Message'),
+                ),
+              ],
+            ),
+          )
+        : ListView.builder(
+            itemCount: messages.length,
+            itemBuilder: (context, index) {
+              final message = messages[index];
+              return MessageBubble(message: message);
+            },
+          );
   }
 }
 

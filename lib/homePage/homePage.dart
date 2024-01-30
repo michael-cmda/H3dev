@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-<<<<<<< Updated upstream
 import 'package:h3devs/messages/messages.dart';
 import 'package:h3devs/search/searchDrawer.dart';
-=======
-import 'package:h3devs/createPost/createPost.dart';
->>>>>>> Stashed changes
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
@@ -145,80 +141,6 @@ class MyHomePage extends StatelessWidget {
                       ),
                     ],
                   ),
-<<<<<<< Updated upstream
-=======
-                  GestureDetector(
-                    onTap: () {},
-                    child: ListTile(
-                      title: Text('Search'),
-                      leading: Icon(Icons.search),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: ListTile(
-                      title: Text('Discover'),
-                      leading: Icon(Icons.explore),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: ListTile(
-                      title: Text('Latest News'),
-                      leading: Icon(Icons.new_releases),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CreatePostScreen()),
-                      );
-                    },
-                    child: ListTile(
-                      title: Text('Create a Post'),
-                      leading: Icon(Icons.edit),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: ListTile(
-                      title: Text('Notification'),
-                      leading: Icon(Icons.notifications),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: ListTile(
-                      title: Text('Messages'),
-                      leading: Icon(Icons.message),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: ListTile(
-                      title: Text('Profile'),
-                      leading: Icon(Icons.person),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: ListTile(
-                      title: Text('Settings'),
-                      leading: Icon(Icons.settings),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                color: Colors.grey[200],
-                padding: EdgeInsets.all(16.0),
-                child: Center(
-                  child: Text('THIS IS HOME PAGE'),
->>>>>>> Stashed changes
                 ),
                 Expanded(
                   child: Container(

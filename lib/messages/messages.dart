@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class Messages extends StatefulWidget {
   const Messages({Key? key}) : super(key: key);
@@ -19,6 +20,34 @@ class _MessagesState extends State<Messages> {
   ];
 
   Contact? selectedContact;
+
+  final socket = io.io(
+    'http://localhost:61653/',
+    io.OptionBuilder().setTransports(['websocket']).build(),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    socket.connect();
+
+    // Handle connection events
+    socket.onConnect((_) => print('Connected to server'));
+    socket.onError((error) => print('Error: ${error.toString()}'));
+
+    // Handle incoming messages
+    socket.on('message', (data) {
+      setState(() {
+        messages.add(Message(sender: data['sender'], text: data['text']));
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    socket.disconnect();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

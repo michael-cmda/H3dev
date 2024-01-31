@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:h3devs/messages/askUser.dart';
+import 'package:h3devs/messages/providers/askUserProvider.dart';
+import 'package:provider/provider.dart';
 
 class Messages extends StatefulWidget {
   const Messages({Key? key}) : super(key: key);
@@ -20,34 +22,6 @@ class _MessagesState extends State<Messages> {
   ];
 
   Contact? selectedContact;
-
-  final socket = io.io(
-    'http://localhost:61653/',
-    io.OptionBuilder().setTransports(['websocket']).build(),
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    socket.connect();
-
-    // Handle connection events
-    socket.onConnect((_) => print('Connected to server'));
-    socket.onError((error) => print('Error: ${error.toString()}'));
-
-    // Handle incoming messages
-    socket.on('message', (data) {
-      setState(() {
-        messages.add(Message(sender: data['sender'], text: data['text']));
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    socket.disconnect();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +101,16 @@ class _MessagesState extends State<Messages> {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider(
+                                create: (context) => AskUserProvider(),
+                                child: AskUserScreen(),
+                              )),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: const Color.fromARGB(255, 49, 52, 76),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:h3devs/messages/messages.dart';
+import 'package:h3devs/notification/notificationDrawer.dart';
 import 'package:h3devs/search/searchDrawer.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -52,106 +53,136 @@ class MyHomePage extends StatelessWidget {
               topLeft: Radius.circular(20.0),
               bottomLeft: Radius.circular(20.0),
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: 200.0,
-                  color: Colors.white,
-                  padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 16.0),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => const HomeRoute(),
-                            ),
-                          );
-                        },
-                        child: const ListTile(
-                          title: Text('Home'),
-                          leading: Icon(Icons.home),
+            child: Container(
+              color: Colors.grey[200],
+              child: Row(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.18,
+                    padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
+                    margin: const EdgeInsets.only(
+                        left: 22.0, top: 16.0, bottom: 16.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(26.0),
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => const HomeRoute(),
+                              ),
+                            );
+                          },
+                          child: const ListTile(
+                            minLeadingWidth: 30,
+                            title: Text('Home'),
+                            leading: Icon(Icons.home),
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          openSearchDrawer(context);
-                        },
-                        child: const ListTile(
-                          title: Text('Search'),
-                          leading: Icon(Icons.search),
+                        const SizedBox(height: 6.0),
+                        GestureDetector(
+                          onTap: () {
+                            openSearchDrawer(context);
+                          },
+                          child: const ListTile(
+                            minLeadingWidth: 30,
+                            title: Text('Search'),
+                            leading: Icon(Icons.search),
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const ListTile(
-                          title: Text('Discover'),
-                          leading: Icon(Icons.explore),
+                        const SizedBox(height: 6.0),
+                        GestureDetector(
+                          onTap: () {},
+                          child: const ListTile(
+                            minLeadingWidth: 30,
+                            title: Text('Discover'),
+                            leading: Icon(Icons.explore),
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const ListTile(
-                          title: Text('Latest News'),
-                          leading: Icon(Icons.new_releases),
+                        const SizedBox(height: 6.0),
+                        GestureDetector(
+                          onTap: () {},
+                          child: const ListTile(
+                            minLeadingWidth: 30,
+                            title: Text('Latest News'),
+                            leading: Icon(Icons.new_releases),
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const ListTile(
-                          title: Text('Create a Post'),
-                          leading: Icon(Icons.edit),
+                        const SizedBox(height: 10.0),
+                        GestureDetector(
+                          onTap: () {},
+                          child: const ListTile(
+                            minLeadingWidth: 30,
+                            title: Text('Create a Post'),
+                            leading: Icon(Icons.edit),
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const ListTile(
-                          title: Text('Notification'),
-                          leading: Icon(Icons.notifications),
+                        const SizedBox(height: 6.0),
+                        GestureDetector(
+                          onTap: () {
+                            const NotificationDrawer();
+                          },
+                          child: const ListTile(
+                            minLeadingWidth: 30,
+                            title: Text('Notification'),
+                            leading: Icon(Icons.notifications),
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Messages()),
-                          );
-                        },
-                        child: const ListTile(
-                          title: Text('Messages'),
-                          leading: Icon(Icons.message),
+                        const SizedBox(height: 6.0),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Messages()),
+                            );
+                          },
+                          child: const ListTile(
+                            minLeadingWidth: 30,
+                            title: Text('Messages'),
+                            leading: Icon(Icons.message),
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const ListTile(
-                          title: Text('Profile'),
-                          leading: Icon(Icons.person),
+                        const SizedBox(height: 6.0),
+                        GestureDetector(
+                          onTap: () {},
+                          child: const ListTile(
+                            minLeadingWidth: 30,
+                            title: Text('Profile'),
+                            leading: Icon(Icons.person),
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const ListTile(
-                          title: Text('Settings'),
-                          leading: Icon(Icons.settings),
+                        const SizedBox(height: 6.0),
+                        GestureDetector(
+                          onTap: () {},
+                          child: const ListTile(
+                            minLeadingWidth: 30,
+                            title: Text('Settings'),
+                            leading: Icon(Icons.settings),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    color: Colors.grey[200],
-                    padding: const EdgeInsets.all(16.0),
-                    child: const Center(
-                      child: Text('THIS IS HOME PAGE'),
+                        const SizedBox(height: 6.0),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: Container(
+                      color: Colors.grey[200],
+                      padding: const EdgeInsets.all(16.0),
+                      child: const Center(
+                        child: Text('THIS IS HOME PAGE'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },

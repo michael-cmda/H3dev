@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:h3devs/messages/askUser.dart';
+import 'package:h3devs/messages/providers/askUserProvider.dart';
+import 'package:provider/provider.dart';
 
 class Messages extends StatefulWidget {
   const Messages({Key? key}) : super(key: key);
@@ -98,7 +101,16 @@ class _MessagesState extends State<Messages> {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider(
+                                create: (context) => AskUserProvider(),
+                                child: AskUserScreen(),
+                              )),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: const Color.fromARGB(255, 49, 52, 76),

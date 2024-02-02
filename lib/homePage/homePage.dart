@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:h3devs/createPost/createPost.dart';
 import 'package:h3devs/messages/messages.dart';
 import 'package:h3devs/notification/notificationDrawer.dart';
 import 'package:h3devs/search/searchDrawer.dart';
@@ -117,7 +118,13 @@ class MyHomePage extends StatelessWidget {
                         ),
                         const SizedBox(height: 10.0),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RealEstateForm()),
+                            );
+                          },
                           child: const ListTile(
                             minLeadingWidth: 30,
                             title: Text('Create a Post'),

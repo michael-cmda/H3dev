@@ -1,7 +1,7 @@
-import 'dart:typed_data'; // Import typed_data for Uint8List
-import 'package:flutter/foundation.dart'; // Import kIsWeb for platform checking
-import 'package:file_picker/file_picker.dart'; // Import file_picker for web file picking
-import 'package:image_picker/image_picker.dart'; // Import image_picker for mobile image picking
+import 'dart:typed_data'; 
+import 'package:flutter/foundation.dart'; 
+import 'package:file_picker/file_picker.dart'; 
+import 'package:image_picker/image_picker.dart'; 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late TextEditingController confirmPasswordController;
   late TextEditingController ageController;
   late TextEditingController addressController;
-  Uint8List? imageBytes; // Holds the selected image bytes
+  Uint8List? imageBytes;
 
   @override
   void initState() {
@@ -125,36 +125,36 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
     );
   }
-Future<void> pickImage() async {
-  try {
-    if (!kIsWeb) {
-      final pickedImage = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-      );
-      if (pickedImage != null) {
-        final imageBytes = await pickedImage.readAsBytes();
-        setState(() {
-          this.imageBytes = Uint8List.fromList(imageBytes);
-        });
-      }
-    } else {
-      final FilePickerResult? pickedImage = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png'],
-        allowMultiple: false,
-      );
 
-      if (pickedImage != null && pickedImage.files.isNotEmpty) {
-        setState(() {
-          imageBytes = pickedImage.files.single.bytes;
-        });
+  Future<void> pickImage() async {
+    try {
+      if (!kIsWeb) {
+        final pickedImage = await ImagePicker().pickImage(
+          source: ImageSource.gallery,
+        );
+        if (pickedImage != null) {
+          final imageBytes = await pickedImage.readAsBytes();
+          setState(() {
+            this.imageBytes = Uint8List.fromList(imageBytes);
+          });
+        }
+      } else {
+        final FilePickerResult? pickedImage = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['jpg', 'jpeg', 'png'],
+          allowMultiple: false,
+        );
+
+        if (pickedImage != null && pickedImage.files.isNotEmpty) {
+          setState(() {
+            imageBytes = pickedImage.files.single.bytes;
+          });
+        }
       }
+    } catch (e) {
+      print('Error picking image: $e');
     }
-  } catch (e) {
-    print('Error picking image: $e');
   }
-}
-
 
   Future<void> _registerUser() async {
     try {

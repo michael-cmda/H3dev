@@ -19,7 +19,7 @@ class MyDesktopBody extends StatelessWidget {
               Stack(
                 children: [
                   Positioned(
-                    child: YourWidget2(),
+                    child: Sidebar(),
                     // Adjust the position as needed
                   ),
                 ],
@@ -33,7 +33,7 @@ class MyDesktopBody extends StatelessWidget {
                     children: [
                       // youtube video
                       Positioned(
-                        child: YourWidget(),
+                        child: HighlightCategory(),
                       ),
 
                       // comment section & recommended videos
@@ -44,7 +44,7 @@ class MyDesktopBody extends StatelessWidget {
                             children: [
                               // youtube video
                               Positioned(
-                                child: YourWidget3(),
+                                child: HomeBody(),
                               ),
 
                               // comment section & recommended videos
@@ -62,13 +62,10 @@ class MyDesktopBody extends StatelessWidget {
                   // Positioned widget for YourWidget4
                   Column(
                     children: [
-                      Positioned(
-                        child: YourWidget4(),
-                        // Adjust the position as needed for YourWidget4
-                      ),
-                      Positioned(
-                        child: YourWidget5(),
-                      ),
+                      Positioned(child: HomeProfileWidget()
+                          // Adjust the position as needed for YourWidget4
+                          ),
+                      Positioned(child: HomeMessagesWidget()),
                     ],
                   ),
 
@@ -88,12 +85,13 @@ BoxDecoration buildBoxDecoration() {
   );
 }
 
-class YourWidget extends StatelessWidget {
-  const YourWidget({super.key});
+class HighlightCategory extends StatelessWidget {
+  const HighlightCategory({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height * 0.25,
       decoration: buildBoxDecoration(),
       padding: const EdgeInsets.all(20.0),
       child: const AspectRatio(
@@ -108,18 +106,20 @@ class YourWidget extends StatelessWidget {
   }
 }
 
-class YourWidget3 extends StatelessWidget {
-  const YourWidget3({super.key});
+class HomeBody extends StatelessWidget {
+  const HomeBody({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width * 0.55,
+      height: MediaQuery.of(context).size.height * 0.635,
       decoration: buildBoxDecoration(),
       padding: const EdgeInsets.all(20.0),
       child: const AspectRatio(
         aspectRatio: 16 / 9.2,
         child: Text(
-          'This is for the body.',
+          'This is for the bodys',
           style: TextStyle(
               color: Color.fromARGB(255, 5, 5, 5), fontWeight: FontWeight.bold),
         ),
@@ -128,14 +128,14 @@ class YourWidget3 extends StatelessWidget {
   }
 }
 
-class YourWidget4 extends StatelessWidget {
-  const YourWidget4({super.key});
+class HomeProfileWidget extends StatelessWidget {
+  const HomeProfileWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.22,
-      height: MediaQuery.of(context).size.width * 0.22,
+      height: MediaQuery.of(context).size.height * 0.55,
       padding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
       margin: const EdgeInsets.only(top: 16, bottom: 16, right: 16.0),
       decoration: BoxDecoration(
@@ -148,14 +148,14 @@ class YourWidget4 extends StatelessWidget {
   }
 }
 
-class YourWidget5 extends StatelessWidget {
-  const YourWidget5({super.key});
+class HomeMessagesWidget extends StatelessWidget {
+  const HomeMessagesWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.22,
-      height: MediaQuery.of(context).size.width * 0.195,
+      height: MediaQuery.of(context).size.height * 0.335,
       padding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
       margin: const EdgeInsets.only(top: 0, bottom: 16, right: 16.0),
       decoration: BoxDecoration(
@@ -168,8 +168,8 @@ class YourWidget5 extends StatelessWidget {
   }
 }
 
-class YourWidget2 extends StatelessWidget {
-  const YourWidget2({super.key});
+class Sidebar extends StatelessWidget {
+  const Sidebar({super.key});
 
   void openSearchDrawer(BuildContext context) {
     Scaffold.of(context).openDrawer();

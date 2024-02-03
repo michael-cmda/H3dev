@@ -92,7 +92,9 @@ BoxDecoration buildBoxDecoration() {
   );
 }
 
-class YourWidget extends StatelessWidget {
+class HighlightsCategory extends StatelessWidget {
+  const HighlightsCategory({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -109,7 +111,9 @@ class YourWidget extends StatelessWidget {
   }
 }
 
-class YourWidget3 extends StatelessWidget {
+class HomeBody extends StatelessWidget {
+  const HomeBody({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -126,7 +130,9 @@ class YourWidget3 extends StatelessWidget {
   }
 }
 
-class YourWidget2 extends StatelessWidget {
+class SideBar extends StatelessWidget {
+  const SideBar({super.key});
+
   void openSearchDrawer(BuildContext context) {
     Scaffold.of(context).openDrawer();
   }

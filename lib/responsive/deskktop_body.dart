@@ -1,132 +1,176 @@
 import 'package:flutter/material.dart';
 import 'package:h3devs/createPost/createPost.dart';
+import 'package:h3devs/homePage/homePage.dart';
 import 'package:h3devs/messages/messages.dart';
 import 'package:h3devs/notification/notificationDrawer.dart';
-import 'package:h3devs/responsive/deskktop_body.dart';
-import 'package:h3devs/responsive/mobile_body.dart';
-import 'package:h3devs/responsive/reponsive_layout.dart';
-import 'package:h3devs/search/searchDrawer.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class MyDesktopBody extends StatelessWidget {
+  const MyDesktopBody({Key? key}) : super(key: key);
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-void openSearchDrawer(BuildContext context) {
-  Scaffold.of(context).openDrawer();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const SearchDrawer(),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            Image.asset('assets/images/logo.png', height: 30.0, width: 30.0),
-            const SizedBox(width: 8.0),
-            const Text('CITY LOADS'),
-          ],
-        ),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 8.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {},
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(right: 16.0),
-            child: IconButton(
-              icon: const CircleAvatar(
-                backgroundImage: AssetImage('assets/images/user.jpg'),
+    return const Scaffold(
+      backgroundColor: Color.fromARGB(255, 243, 243, 243),
+      body: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              // Second column (assuming YourWidget2 is a widget you want to position)
+              Stack(
+                children: [
+                  Positioned(
+                    child: YourWidget2(),
+                    // Adjust the position as needed
+                  ),
+                ],
               ),
-              onPressed: () {},
-            ),
-          ),
-        ],
-      ),
-      body: Builder(
-        builder: (context) {
-          return Scaffold(
-            body: ResponsiveLayout(
-              mobileBody: MyMobileBody(),
-              desktopBody: MyDesktopBody(),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
 
-class HomeRoute extends StatelessWidget {
-  const HomeRoute({super.key});
+              // First column
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      // youtube video
+                      Positioned(
+                        child: YourWidget(),
+                      ),
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body: const Center(
-        child: Text('This is the Home route.'),
-      ),
+                      // comment section & recommended videos
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: Column(
+                            children: [
+                              // youtube video
+                              Positioned(
+                                child: YourWidget3(),
+                              ),
+
+                              // comment section & recommended videos
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Third column
+              Stack(
+                children: [
+                  // Positioned widget for YourWidget4
+                  Column(
+                    children: [
+                      Positioned(
+                        child: YourWidget4(),
+                        // Adjust the position as needed for YourWidget4
+                      ),
+                      Positioned(
+                        child: YourWidget5(),
+                      ),
+                    ],
+                  ),
+
+                  // Another Positioned widget for YourWidget5 under YourWidget4
+                ],
+              ),
+            ],
+          )),
     );
   }
 }
 
 BoxDecoration buildBoxDecoration() {
   return BoxDecoration(
-    color: Color.fromARGB(255, 255, 255, 255),
+    color: const Color.fromARGB(255, 255, 255, 255),
     borderRadius: BorderRadius.circular(16.0),
   );
 }
 
 class YourWidget extends StatelessWidget {
+  const YourWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 210,
-      width: 850,
       decoration: buildBoxDecoration(),
-      padding: EdgeInsets.all(18.0),
-      child: const Text(
-        'This is for highlights category.',
-        style: TextStyle(
-            color: Color.fromARGB(255, 5, 5, 5), fontWeight: FontWeight.bold),
+      padding: const EdgeInsets.all(20.0),
+      child: const AspectRatio(
+        aspectRatio: 16 / 2,
+        child: Text(
+          'This is for highlights category.',
+          style: TextStyle(
+              color: Color.fromARGB(255, 5, 5, 5), fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
 }
 
 class YourWidget3 extends StatelessWidget {
+  const YourWidget3({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
-      width: 850,
       decoration: buildBoxDecoration(),
-      padding: EdgeInsets.all(18.0),
-      child: const Text(
-        'This is for body.',
-        style: TextStyle(
-            color: Color.fromARGB(255, 5, 5, 5), fontWeight: FontWeight.bold),
+      padding: const EdgeInsets.all(20.0),
+      child: const AspectRatio(
+        aspectRatio: 16 / 9.2,
+        child: Text(
+          'This is for the body.',
+          style: TextStyle(
+              color: Color.fromARGB(255, 5, 5, 5), fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
 }
 
+class YourWidget4 extends StatelessWidget {
+  const YourWidget4({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.22,
+      height: MediaQuery.of(context).size.width * 0.22,
+      padding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+      margin: const EdgeInsets.only(top: 16, bottom: 16, right: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26.0),
+        color: Colors.white,
+      ),
+
+      // Add your child widget(s) here
+    );
+  }
+}
+
+class YourWidget5 extends StatelessWidget {
+  const YourWidget5({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.22,
+      height: MediaQuery.of(context).size.width * 0.195,
+      padding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+      margin: const EdgeInsets.only(top: 0, bottom: 16, right: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26.0),
+        color: Colors.white,
+      ),
+
+      // Add your child widget(s) here
+    );
+  }
+}
+
 class YourWidget2 extends StatelessWidget {
+  const YourWidget2({super.key});
+
   void openSearchDrawer(BuildContext context) {
     Scaffold.of(context).openDrawer();
   }

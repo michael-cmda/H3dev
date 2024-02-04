@@ -111,17 +111,20 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.55,
-      height: MediaQuery.of(context).size.height * 0.635,
-      decoration: buildBoxDecoration(),
-      padding: const EdgeInsets.all(20.0),
-      child: const AspectRatio(
-        aspectRatio: 16 / 9.2,
-        child: Text(
-          'This is for the bodys',
-          style: TextStyle(
-              color: Color.fromARGB(255, 5, 5, 5), fontWeight: FontWeight.bold),
+    return Flexible(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.55,
+        height: MediaQuery.of(context).size.height * 0.635,
+        decoration: buildBoxDecoration(),
+        padding: const EdgeInsets.all(20.0),
+        child: const AspectRatio(
+          aspectRatio: 16 / 9.2,
+          child: Text(
+            'This is for the bodys',
+            style: TextStyle(
+                color: Color.fromARGB(255, 5, 5, 5),
+                fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
@@ -153,17 +156,19 @@ class HomeMessagesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.22,
-      height: MediaQuery.of(context).size.height * 0.335,
-      padding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
-      margin: const EdgeInsets.only(top: 0, bottom: 16, right: 16.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26.0),
-        color: Colors.white,
-      ),
+    return Flexible(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.22,
+        height: MediaQuery.of(context).size.height * 0.335,
+        padding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+        margin: const EdgeInsets.only(top: 0, bottom: 16, right: 16.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(26.0),
+          color: Colors.white,
+        ),
 
-      // Add your child widget(s) here
+        // Add your child widget(s) here
+      ),
     );
   }
 }
@@ -177,121 +182,123 @@ class Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.18,
-      padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
-      margin: const EdgeInsets.only(left: 22.0, top: 16.0, bottom: 16.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26.0),
-        color: Colors.white,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const HomeRoute(),
-                ),
-              );
-            },
-            child: const ListTile(
-              minLeadingWidth: 30,
-              title: Text('Home'),
-              leading: Icon(Icons.home),
+    return Flexible(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.18,
+        padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
+        margin: const EdgeInsets.only(left: 22.0, top: 16.0, bottom: 16.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(26.0),
+          color: Colors.white,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const HomeRoute(),
+                  ),
+                );
+              },
+              child: const ListTile(
+                minLeadingWidth: 30,
+                title: Text('Home'),
+                leading: Icon(Icons.home),
+              ),
             ),
-          ),
-          const SizedBox(height: 6.0),
-          GestureDetector(
-            onTap: () {
-              openSearchDrawer(context);
-            },
-            child: const ListTile(
-              minLeadingWidth: 30,
-              title: Text('Search'),
-              leading: Icon(Icons.search),
+            const SizedBox(height: 6.0),
+            GestureDetector(
+              onTap: () {
+                openSearchDrawer(context);
+              },
+              child: const ListTile(
+                minLeadingWidth: 30,
+                title: Text('Search'),
+                leading: Icon(Icons.search),
+              ),
             ),
-          ),
-          const SizedBox(height: 6.0),
-          GestureDetector(
-            onTap: () {},
-            child: const ListTile(
-              minLeadingWidth: 30,
-              title: Text('Discover'),
-              leading: Icon(Icons.explore),
+            const SizedBox(height: 6.0),
+            GestureDetector(
+              onTap: () {},
+              child: const ListTile(
+                minLeadingWidth: 30,
+                title: Text('Discover'),
+                leading: Icon(Icons.explore),
+              ),
             ),
-          ),
-          const SizedBox(height: 6.0),
-          GestureDetector(
-            onTap: () {},
-            child: const ListTile(
-              minLeadingWidth: 30,
-              title: Text('Latest News'),
-              leading: Icon(Icons.new_releases),
+            const SizedBox(height: 6.0),
+            GestureDetector(
+              onTap: () {},
+              child: const ListTile(
+                minLeadingWidth: 30,
+                title: Text('Latest News'),
+                leading: Icon(Icons.new_releases),
+              ),
             ),
-          ),
-          const SizedBox(height: 10.0),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => RealEstateForm()),
-              );
-            },
-            child: const ListTile(
-              minLeadingWidth: 30,
-              title: Text('Create a Post'),
-              leading: Icon(Icons.edit),
+            const SizedBox(height: 10.0),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RealEstateForm()),
+                );
+              },
+              child: const ListTile(
+                minLeadingWidth: 30,
+                title: Text('Create a Post'),
+                leading: Icon(Icons.edit),
+              ),
             ),
-          ),
-          const SizedBox(height: 6.0),
-          GestureDetector(
-            onTap: () {
-              const NotificationDrawer();
-            },
-            child: const ListTile(
-              minLeadingWidth: 30,
-              title: Text('Notification'),
-              leading: Icon(Icons.notifications),
+            const SizedBox(height: 6.0),
+            GestureDetector(
+              onTap: () {
+                const NotificationDrawer();
+              },
+              child: const ListTile(
+                minLeadingWidth: 30,
+                title: Text('Notification'),
+                leading: Icon(Icons.notifications),
+              ),
             ),
-          ),
-          const SizedBox(height: 6.0),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Messages()),
-              );
-            },
-            child: const ListTile(
-              minLeadingWidth: 30,
-              title: Text('Messages'),
-              leading: Icon(Icons.message),
+            const SizedBox(height: 6.0),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Messages()),
+                );
+              },
+              child: const ListTile(
+                minLeadingWidth: 30,
+                title: Text('Messages'),
+                leading: Icon(Icons.message),
+              ),
             ),
-          ),
-          const SizedBox(height: 6.0),
-          GestureDetector(
-            onTap: () {},
-            child: const ListTile(
-              minLeadingWidth: 30,
-              title: Text('Profile'),
-              leading: Icon(Icons.person),
+            const SizedBox(height: 6.0),
+            GestureDetector(
+              onTap: () {},
+              child: const ListTile(
+                minLeadingWidth: 30,
+                title: Text('Profile'),
+                leading: Icon(Icons.person),
+              ),
             ),
-          ),
-          const SizedBox(height: 6.0),
-          GestureDetector(
-            onTap: () {},
-            child: const ListTile(
-              minLeadingWidth: 30,
-              title: Text('Settings'),
-              leading: Icon(Icons.settings),
+            const SizedBox(height: 6.0),
+            GestureDetector(
+              onTap: () {},
+              child: const ListTile(
+                minLeadingWidth: 30,
+                title: Text('Settings'),
+                leading: Icon(Icons.settings),
+              ),
             ),
-          ),
-          const SizedBox(height: 6.0),
-        ],
+            const SizedBox(height: 6.0),
+          ],
+        ),
       ),
     );
   }

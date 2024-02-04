@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:h3devs/createPost/createPost.dart';
 import 'package:h3devs/homePage/homePage.dart';
-import 'package:h3devs/messages/messages.dart';
+import 'package:h3devs/messages/screens/messages.dart';
 import 'package:h3devs/notification/notificationDrawer.dart';
 
 class MyDesktopBody extends StatelessWidget {

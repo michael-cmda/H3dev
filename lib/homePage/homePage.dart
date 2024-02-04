@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:h3devs/createPost/createPost.dart';
-import 'package:h3devs/messages/messages.dart';
+import 'package:h3devs/messages/screens/messages.dart';
 import 'package:h3devs/notification/notificationDrawer.dart';
 import 'package:h3devs/responsive/deskktop_body.dart';
 import 'package:h3devs/responsive/mobile_body.dart';

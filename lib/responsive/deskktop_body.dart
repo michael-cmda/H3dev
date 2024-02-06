@@ -269,9 +269,32 @@ class Sidebar extends StatelessWidget {
               const SizedBox(height: 10.0),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RealEstateForm()),
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              100.0), // Adjust radius as needed
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                100.0), // Same as dialog border radius
+                            border: Border.all(
+                                color: Color.fromARGB(
+                                    255, 20, 15, 15)), // Grey border
+                          ),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width *
+                                0.8, // Adjust width as needed
+                            height: MediaQuery.of(context).size.height *
+                                0.6, // Adjust height as needed
+                            child: RealEstateForm(),
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
                 child: const ListTile(

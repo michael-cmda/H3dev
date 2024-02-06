@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:h3devs/messages/askUser.dart';
-import 'package:h3devs/messages/providers/askUserProvider.dart';
-import 'package:provider/provider.dart';
+import 'package:h3devs/messages/screens/sendMessage.dart';
 
 class Messages extends StatefulWidget {
   const Messages({Key? key}) : super(key: key);
@@ -105,10 +103,8 @@ class _MessagesState extends State<Messages> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ChangeNotifierProvider(
-                                create: (context) => AskUserProvider(),
-                                child: AskUserScreen(),
-                              )),
+                        builder: (context) => SendMessage(),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(

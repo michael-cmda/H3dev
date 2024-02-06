@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:h3devs/homePage/homePage.dart';
 import 'package:h3devs/register.dart';
+
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
@@ -31,7 +32,6 @@ class _LoginState extends State<Login> {
     usernameController = TextEditingController();
     passwordController = TextEditingController();
     error = "";
-    
   }
 
   @override
@@ -209,32 +209,37 @@ class _LoginState extends State<Login> {
                                         ),
                                       ),
                                       const SizedBox(height: 20),
-                                    ElevatedButton(
-  onPressed: () async {
-    await _loginUser(); // Call the _loginUser method when the button is pressed
-  },
-  style: ButtonStyle(
-    backgroundColor: MaterialStateProperty.all<Color>(
-      Color.fromARGB(255, 38, 58, 88),
-    ),
-    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-      EdgeInsets.symmetric(vertical: 20, horizontal: 1),
-    ),
-    textStyle: MaterialStateProperty.all<TextStyle>(
-      TextStyle(fontSize: 20),
-    ),
-  ),
-  child: Text(
-    'Sign in',
-    style: GoogleFonts.ubuntu(
-      color: Color.fromARGB(255, 255, 255, 255),
-      fontSize: 20,
-      letterSpacing: 3.0,
-      fontWeight: FontWeight.bold,
-    ),
-    textAlign: TextAlign.left,
-  ),
-),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          await _loginUser(); // Call the _loginUser method when the button is pressed
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                            Color.fromARGB(255, 38, 58, 88),
+                                          ),
+                                          padding: MaterialStateProperty.all<
+                                              EdgeInsetsGeometry>(
+                                            EdgeInsets.symmetric(
+                                                vertical: 20, horizontal: 1),
+                                          ),
+                                          textStyle: MaterialStateProperty.all<
+                                              TextStyle>(
+                                            TextStyle(fontSize: 20),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Sign in',
+                                          style: GoogleFonts.ubuntu(
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255),
+                                            fontSize: 20,
+                                            letterSpacing: 3.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ),
 
                                       const SizedBox(height: 20),
                                       Row(
@@ -271,26 +276,30 @@ class _LoginState extends State<Login> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                   
-    ElevatedButton.icon(
-      onPressed: _signInWithGoogle,
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(
-            Color.fromARGB(255, 255, 7, 7)),
-      ),
-      icon: Icon(Icons.g_mobiledata_rounded),
-      label: Text('Google'),
-    ),
-    SizedBox(width: 10),
-    ElevatedButton.icon(
-      onPressed: _signInWithFacebook,
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-      ),
-      icon: Icon(Icons.facebook),
-      label: Text('Facebook'),
-    ),
-
+                                          ElevatedButton.icon(
+                                            onPressed: _signInWithGoogle,
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                          Color>(
+                                                      Color.fromARGB(
+                                                          255, 255, 7, 7)),
+                                            ),
+                                            icon: Icon(
+                                                Icons.g_mobiledata_rounded),
+                                            label: Text('Google'),
+                                          ),
+                                          SizedBox(width: 10),
+                                          ElevatedButton.icon(
+                                            onPressed: _signInWithFacebook,
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                      Color>(Colors.blue),
+                                            ),
+                                            icon: Icon(Icons.facebook),
+                                            label: Text('Facebook'),
+                                          ),
                                         ],
                                       ),
                                       Text(
@@ -400,75 +409,75 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-  
- // Remove the 'final' keyword from the declaration
 
-Future<void> _loginUser() async {
-  try {
-    // Sign in user with email and password
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: usernameController.text,
-      password: passwordController.text,
+  // Remove the 'final' keyword from the declaration
+
+  Future<void> _loginUser() async {
+    try {
+      // Sign in user with email and password
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: usernameController.text,
+        password: passwordController.text,
+      );
+
+      // Login successful, navigate to another page or perform additional actions
+      _redirectToNewPage(); // Add this line to redirect to a new page
+      print('Login Successful!');
+    } catch (error) {
+      // Handle login errors
+      setState(() {
+        this.error =
+            'Login failed: $error'; // Use 'this.error' to refer to the instance variable
+      });
+      print('Login failed: $error');
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    try {
+      await _googleSignIn.signIn();
+      // Add logic for successful Google sign-in
+      _redirectToNewPage();
+      print('Google Sign-In Successful. User: ${_googleSignIn.currentUser}');
+    } catch (error) {
+      print('Google Sign-In Error: $error');
+      // Handle error
+    }
+  }
+
+  // Implement the Facebook login method
+  Future<void> _signInWithFacebook() async {
+    try {
+      final LoginResult result = await _facebookAuth.login();
+      if (result.status == LoginStatus.success) {
+        // Add logic for successful Facebook login
+        _redirectToNewPage();
+        print('Facebook Login Successful. Token: ${result.accessToken?.token}');
+      } else {
+        // Handle error
+        print('Facebook Login Error: ${result.message}');
+      }
+    } catch (error) {
+      print('Facebook Login Error: $error');
+      // Handle error
+    }
+  }
+
+  // ...
+
+  // New method to redirect to a new page
+  void _redirectToNewPage() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            const MyHomePage(), // Replace YourNewPage with the actual page you want to navigate to.
+      ),
     );
-
-    // Login successful, navigate to another page or perform additional actions
-    _redirectToNewPage(); // Add this line to redirect to a new page
-    print('Login Successful!');
-  } catch (error) {
-    // Handle login errors
-    setState(() {
-      this.error = 'Login failed: $error'; // Use 'this.error' to refer to the instance variable
-    });
-    print('Login failed: $error');
   }
 }
 
-
-
-  Future<void> _signInWithGoogle() async {
-      try {
-        await _googleSignIn.signIn();
-        // Add logic for successful Google sign-in
-        _redirectToNewPage();
-        print('Google Sign-In Successful. User: ${_googleSignIn.currentUser}');
-      } catch (error) {
-        print('Google Sign-In Error: $error');
-        // Handle error
-      }
-    }
-
-    // Implement the Facebook login method
-    Future<void> _signInWithFacebook() async {
-      try {
-        final LoginResult result = await _facebookAuth.login();
-        if (result.status == LoginStatus.success) {
-          // Add logic for successful Facebook login
-          _redirectToNewPage();
-          print('Facebook Login Successful. Token: ${result.accessToken?.token}');
-        } else {
-          // Handle error
-          print('Facebook Login Error: ${result.message}');
-        }
-      } catch (error) {
-        print('Facebook Login Error: $error');
-        // Handle error
-      }
-    }
-
-    // ...
-
-    // New method to redirect to a new page
-    void _redirectToNewPage() {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MyHomePage(), // Replace YourNewPage with the actual page you want to navigate to.
-        ),
-      );
-    }
-  }
-
-  void _showAgreementDialog(BuildContext context) {
+void _showAgreementDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -513,4 +522,3 @@ Future<void> _loginUser() async {
     },
   );
 }
-

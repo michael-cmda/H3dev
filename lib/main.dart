@@ -23,11 +23,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'City Loads',
       theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white, // Set the AppBar color to white
+        ),
         primarySwatch: Colors.blue,
       ),
-<<<<<<< HEAD
-      home: Login(),
-=======
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
@@ -42,7 +42,6 @@ class MyApp extends StatelessWidget {
           }
         },
       ),
->>>>>>> 4f165e1a3477a14d9468b7009725dc0a201f06b9
     );
   }
 }

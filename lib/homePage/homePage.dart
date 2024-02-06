@@ -74,6 +74,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       drawer: const SearchDrawer(),
       appBar: AppBar(
@@ -105,15 +107,63 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         backgroundColor: Colors.white,
         actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 8.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {},
+          Row(
+            children: [
+              Visibility(
+                visible: screenWidth <= 800,
+                child: IconButton(
+                  color: Colors.black,
+                  icon: const Icon(Icons.view_headline_rounded),
+                  onPressed: () {},
+                ),
+              ),
+              const SizedBox(width: 8.0),
+              Visibility(
+                visible: screenWidth >= 700,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12.0, right: 12),
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 20.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(100.0),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Visibility(
+                visible: screenWidth >= 600,
+                child: const SizedBox(
+                  width: 150,
+                  child: TextField(
+                    style: TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Search',
+                      hintStyle: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 12.0, right: 12),
+            child: Container(
+              margin: const EdgeInsets.only(right: 20.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(100.0),
+              ),
+              child: IconButton(
+                color: Colors.black,
+                icon: const Icon(Icons.search),
+                onPressed: () {},
+              ),
             ),
           ),
           Padding(

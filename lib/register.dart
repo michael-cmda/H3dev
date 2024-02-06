@@ -1,7 +1,7 @@
-import 'dart:typed_data'; 
-import 'package:flutter/foundation.dart'; 
-import 'package:file_picker/file_picker.dart'; 
-import 'package:image_picker/image_picker.dart'; 
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -139,7 +139,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
           });
         }
       } else {
-        final FilePickerResult? pickedImage = await FilePicker.platform.pickFiles(
+        final FilePickerResult? pickedImage =
+            await FilePicker.platform.pickFiles(
           type: FileType.custom,
           allowedExtensions: ['jpg', 'jpeg', 'png'],
           allowMultiple: false,
@@ -170,12 +171,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
         String imageUrl = await _uploadImageToStorage();
 
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
         );
 
+        String uid = userCredential.user!.uid;
+
         await FirebaseFirestore.instance.collection('users').add({
+          'uid': uid,
           'name': nameController.text,
           'email': emailController.text,
           'password': passwordController.text,
@@ -229,8 +234,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Future<String> _uploadImageToStorage() async {
     if (imageBytes == null) return '';
 
-    Reference storageReference =
-        FirebaseStorage.instance.ref().child('profile_images/${DateTime.now().millisecondsSinceEpoch}');
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('profile_images/${DateTime.now().millisecondsSinceEpoch}');
 
     UploadTask uploadTask = storageReference.putData(imageBytes!);
     TaskSnapshot snapshot = await uploadTask.whenComplete(() {});

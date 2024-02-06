@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -28,60 +29,32 @@ class _ConversationScreenState extends State<ConversationScreen> {
               stream: FirebaseFirestore.instance
                   .collection('conversations')
                   .doc(widget.conversationId)
-                  .collection('sent_messages')
-                  .orderBy('timestamp', descending: false)
+                  .collection('messages')
+                  .orderBy('timestamp', descending: true)
                   .snapshots(),
-              builder: (context, sentMessagesSnapshot) {
-                if (sentMessagesSnapshot.hasError) {
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
                   return Center(child: Text('Error loading messages'));
                 }
 
-                if (sentMessagesSnapshot.connectionState ==
-                    ConnectionState.waiting) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 }
 
-                final sentMessages = sentMessagesSnapshot.data!.docs;
+                final messages = snapshot.data!.docs;
 
-                return StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('conversations')
-                      .doc(widget.conversationId)
-                      .collection(
-                          'replies') 
-                      .orderBy('timestamp', descending: false)
-                      .snapshots(),
-                  builder: (context, repliesSnapshot) {
-                    if (repliesSnapshot.hasError) {
-                      return Center(child: Text('Error loading replies'));
-                    }
+                return ListView.builder(
+                  controller: _scrollController,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final messageData =
+                        messages[index].data() as Map<String, dynamic>;
+                    final messageType = messageData['type'];
 
-                    if (repliesSnapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-
-                    final replies = repliesSnapshot.data!.docs;
-
-                    final allMessages = [...sentMessages, ...replies];
-                    allMessages.sort((a, b) => (a['timestamp'] as Timestamp)
-                        .compareTo(b['timestamp'] as Timestamp));
-
-                    return ListView.builder(
-                      reverse: true,
-                      controller: _scrollController,
-                      itemCount: allMessages.length,
-                      itemBuilder: (context, index) {
-                        final messageData =
-                            allMessages[index].data() as Map<String, dynamic>;
-                        final isReply = replies.contains(allMessages[index]);
-
-                        return MessageBubble(
-                          sender: messageData['sender'],
-                          text: messageData['message'],
-                          isReply: isReply,
-                        );
-                      },
+                    return MessageBubble(
+                      sender: messageData['sender'],
+                      text: messageData['message'],
+                      isReply: messageType == 'reply',
                     );
                   },
                 );
@@ -104,21 +77,36 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   onPressed: () async {
                     final message = _messageController.text.trim();
                     if (message.isNotEmpty) {
-                      await FirebaseFirestore.instance
+                      final currentUser = FirebaseAuth.instance.currentUser;
+                      final senderId = currentUser?.uid; 
+
+                      final conversationSnapshot = await FirebaseFirestore
+                          .instance
                           .collection('conversations')
                           .doc(widget.conversationId)
-                          .collection('sent_messages')
-                          .add({
-                        'sender': 'John Doe',
-                        'message': message,
-                        'timestamp': FieldValue.serverTimestamp(),
-                      });
-                      _messageController.clear();
-                      _scrollController.animateTo(
-                        _scrollController.position.maxScrollExtent,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeIn,
-                      );
+                          .get();
+                      final receiverId =
+                          conversationSnapshot.get('participants')[1];
+
+                      if (senderId != null && receiverId != null) {
+                        await FirebaseFirestore.instance
+                            .collection('conversations')
+                            .doc(widget.conversationId)
+                            .collection('messages')
+                            .add({
+                          'sender': senderId,
+                          'receiverID': receiverId,
+                          'type': 'sent',
+                          'message': message,
+                          'timestamp': FieldValue.serverTimestamp(),
+                        });
+                        _messageController.clear();
+                        _scrollController.animateTo(
+                          _scrollController.position.maxScrollExtent,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeIn,
+                        );
+                      }
                     }
                   },
                   icon: const Icon(Icons.send),
@@ -169,9 +157,7 @@ class MessageBubble extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(15.0),
                   decoration: BoxDecoration(
-                    color: isReply
-                        ? Colors.grey
-                        : Colors.blue, 
+                    color: isReply ? Colors.grey : Colors.blue,
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                   child: Column(

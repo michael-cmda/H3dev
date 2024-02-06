@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:h3devs/createPost/createPost.dart';
+import 'package:h3devs/login.dart';
 import 'package:h3devs/messages/screens/messages.dart';
 import 'package:h3devs/notification/notificationDrawer.dart';
 import 'package:h3devs/responsive/deskktop_body.dart';
@@ -19,6 +22,56 @@ void openSearchDrawer(BuildContext context) {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String? _currentUserUid;
+  String? _currentUserName;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUid();
+  }
+
+  void _fetchUid() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    setState(() {
+      _currentUserUid = user?.uid;
+    });
+
+    if (_currentUserUid != null) {
+      _fetchDocumentId();
+    }
+  }
+
+  void _fetchDocumentId() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: _currentUserUid)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final docId = querySnapshot.docs.first.id;
+      _fetchName(docId); // Pass the retrieved document ID
+    } else {
+      // Handle the case where no user document matches the UID
+      debugPrint('User document not found in Firestore.');
+    }
+  }
+
+  void _fetchName(String docId) async {
+    final docSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(docId).get();
+
+    if (docSnapshot.exists) {
+      final data = docSnapshot.data();
+      setState(() {
+        _currentUserName = data?['name'];
+      });
+    } else {
+      // Handle the case where the user document doesn't exist
+      debugPrint('User document does not exist in Firestore.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,13 +97,31 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {},
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(right: 16.0),
-            child: IconButton(
+          Padding(
+            padding: const EdgeInsets.only(right: 30),
+            child: PopupMenuButton<dynamic>(
               icon: const CircleAvatar(
                 backgroundImage: AssetImage('assets/images/user.jpg'),
               ),
-              onPressed: () {},
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child:
+                      Text(_currentUserName ?? _currentUserUid ?? 'Loading...'),
+                ),
+                PopupMenuItem(
+                  child: const Text('Logout'),
+                  onTap: () async {
+                    // Perform the logout logic
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pop(); // Close the dialog
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Login()),
+                      (route) => false,
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ],

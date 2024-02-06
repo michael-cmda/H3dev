@@ -80,11 +80,30 @@ class _MyHomePageState extends State<MyHomePage> {
         automaticallyImplyLeading: false,
         title: Row(
           children: [
-            Image.asset('assets/images/logo.png', height: 30.0, width: 30.0),
+            Image.asset('assets/images/logo-transparent.png',
+                height: 30.0, width: 30.0),
             const SizedBox(width: 8.0),
-            const Text('CITY LOADS'),
+            const Row(
+              children: [
+                Text(
+                  'CITY',
+                  style: TextStyle(color: Color(0xFF00008B)),
+                ),
+                SizedBox(
+                  width: 3.5,
+                ),
+                Text(
+                  'LOADS',
+                  style: TextStyle(
+                      color: Color(0xFF00008B),
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.5),
+                ),
+              ],
+            ),
           ],
         ),
+        backgroundColor: Colors.white,
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 8.0),

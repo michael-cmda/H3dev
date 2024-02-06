@@ -458,22 +458,47 @@ class _RealEstateFormState extends State<RealEstateForm> {
         ),
         Row(
           children: [
-            ElevatedButton(
-              onPressed: () => _selectImages(),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.lightBlue,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  ..._selectedImages.map(
+                    (imageUrl) => Padding(
+                      padding: EdgeInsets.only(
+                          right: 8.0), // Add space between images
+                      child: Container(
+                        width: 150.0, // Adjust width as needed
+                        height: 80.0, // Adjust height as needed
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          border: Border.all(color: Colors.grey), // Grey border
+                          borderRadius:
+                              BorderRadius.circular(8.0), // Rounded corners
+                          image: DecorationImage(
+                            image: NetworkImage(imageUrl),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              child: Text('Select Images'),
             ),
             SizedBox(width: 16.0),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    ..._selectedImages
-                        .map((imageUrl) => _buildSelectedImage(imageUrl)),
-                  ],
+            GestureDetector(
+              onTap: () => _selectImages(),
+              child: Container(
+                width: 150.0, // Adjust width as needed
+                height: 80.0, // Adjust height as needed
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

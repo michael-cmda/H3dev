@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:h3devs/messages/screens/sendMessage.dart';
+import 'package:h3devs/messages/screens/chatPage.dart';
 
 class Messages extends StatefulWidget {
   const Messages({Key? key}) : super(key: key);
@@ -103,7 +103,10 @@ class _MessagesState extends State<Messages> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SendMessage(),
+                        builder: (context) => ChatPage(
+                          userName: '',
+                          userEmail: '',
+                        ),
                       ),
                     );
                   },

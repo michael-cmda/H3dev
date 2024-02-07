@@ -275,21 +275,24 @@ class Sidebar extends StatelessWidget {
                       return Dialog(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
-                              100.0), // Adjust radius as needed
+                            20.0, // Adjust radius as needed
+                          ),
                         ),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(
-                                100.0), // Same as dialog border radius
+                              20.0, // Same as dialog border radius
+                            ),
                             border: Border.all(
-                                color: Color.fromARGB(
-                                    255, 20, 15, 15)), // Grey border
+                              color: Colors.grey, // Grey border color
+                              width: 2.0, // Border width
+                            ),
                           ),
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width *
-                                0.8, // Adjust width as needed
+                                0.6, // Decreased width to 70% of screen width
                             height: MediaQuery.of(context).size.height *
-                                0.6, // Adjust height as needed
+                                0.7, // Increased height to 80% of screen height
                             child: RealEstateForm(),
                           ),
                         ),
@@ -301,17 +304,6 @@ class Sidebar extends StatelessWidget {
                   minLeadingWidth: 30,
                   title: Text('Create a Post'),
                   leading: Icon(Icons.edit),
-                ),
-              ),
-              const SizedBox(height: 6.0),
-              GestureDetector(
-                onTap: () {
-                  const NotificationDrawer();
-                },
-                child: const ListTile(
-                  minLeadingWidth: 30,
-                  title: Text('Notification'),
-                  leading: Icon(Icons.notifications),
                 ),
               ),
               const SizedBox(height: 6.0),

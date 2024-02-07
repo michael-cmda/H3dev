@@ -216,7 +216,7 @@ class HomeRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Homee'),
       ),
       body: const Center(
         child: Text('This is the Home route.'),

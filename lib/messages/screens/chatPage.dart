@@ -56,9 +56,9 @@ class UserSelectionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection('Users')
+          .collection('users')
           .where('name', isGreaterThanOrEqualTo: searchQuery)
-          .where('name', isLessThan: searchQuery! + 'z')
+          .where('name', isLessThan: searchQuery! + '\uf8ff')
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:h3devs/messages/screens/chatPage.dart';
+import 'package:intl/intl.dart';
 
 class Messages extends StatefulWidget {
   const Messages({Key? key}) : super(key: key);
@@ -18,10 +20,21 @@ class _MessagesState extends State<Messages> {
   @override
   void initState() {
     super.initState();
-   
-    currentUserEmail = "shanti@test.com"; 
-   
+    fetchCurrentUserEmail();
     fetchRecentChats();
+  }
+
+  Future<void> fetchCurrentUserEmail() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        setState(() {
+          currentUserEmail = user.email!;
+        });
+      }
+    } catch (e) {
+      print("Error fetching current user's email: $e");
+    }
   }
 
   Future<void> fetchRecentChats() async {
@@ -30,27 +43,67 @@ class _MessagesState extends State<Messages> {
           .collection('messages')
           .where('users', arrayContains: currentUserEmail)
           .get();
+      print("Number of chat documents: ${chatSnapshot.docs.length}");
       List<Contact> contacts = [];
+
+      List<Future<void>> tasks = [];
+
       chatSnapshot.docs.forEach((chatDoc) {
-     
-        List<dynamic> users = chatDoc['users'];
-        String otherUserEmail =
-            users.firstWhere((user) => user != currentUserEmail);
-     
-        Contact contact = Contact(
-            name: otherUserEmail.split('@')[0],
-            email: otherUserEmail,
-            imageUrl: ''); 
-        if (!contacts.contains(contact)) {
-          contacts.add(contact);
-        }
+        tasks.add(Future<void>(() async {
+          List<dynamic> users = chatDoc['users'];
+          String otherUserEmail;
+          try {
+            otherUserEmail =
+                users.firstWhere((user) => user != currentUserEmail);
+          } catch (e) {
+            print("Error finding other user email: $e");
+            return;
+          }
+
+          QuerySnapshot messagesSnapshot = await _firestore
+              .collection('messages')
+              .doc(chatDoc.id)
+              .collection('chats')
+              .orderBy('timestamp', descending: true)
+              .limit(1)
+              .get();
+
+          if (messagesSnapshot.docs.isNotEmpty) {
+            Timestamp timestamp = messagesSnapshot.docs.first['timestamp'];
+            String timeAgo = getTimeAgo(timestamp.toDate());
+
+            Contact contact = Contact(
+                name: otherUserEmail.split('@')[0],
+                email: otherUserEmail,
+                imageUrl: '',
+                timeAgo: timeAgo);
+            if (!contacts.contains(contact)) {
+              contacts.add(contact);
+            }
+          }
+        }));
       });
+
+      await Future.wait(tasks);
 
       setState(() {
         recentContacts = contacts;
       });
     } catch (e) {
       print("Error fetching recent chats: $e");
+    }
+  }
+
+  String getTimeAgo(DateTime dateTime) {
+    Duration difference = DateTime.now().difference(dateTime);
+    if (difference.inDays > 0) {
+      return '${difference.inDays}d';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}h';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}m';
+    } else {
+      return 'Just now';
     }
   }
 
@@ -90,8 +143,7 @@ class _MessagesState extends State<Messages> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount:
-                recentContacts.length, 
+            itemCount: recentContacts.length,
             itemBuilder: (context, index) {
               final contact = recentContacts[index];
               return ContactTile(
@@ -99,9 +151,18 @@ class _MessagesState extends State<Messages> {
                 isSelected: contact == selectedContact,
                 onTap: () {
                   setState(() {
-                    selectedContact =
-                        contact; 
+                    selectedContact = contact;
                   });
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatPage(
+                        userName: contact.name,
+                        userEmail: contact.email,
+                        // profilePictureUrl: profilePictureUrl,
+                      ),
+                    ),
+                  );
                 },
               );
             },
@@ -159,7 +220,7 @@ class _MessagesState extends State<Messages> {
               ],
             ),
           )
-        : Container(); 
+        : Container();
   }
 }
 
@@ -167,9 +228,14 @@ class Contact {
   final String name;
   final String imageUrl;
   final String email;
+  final String timeAgo;
 
-  const Contact(
-      {required this.name, required this.imageUrl, required this.email});
+  const Contact({
+    required this.name,
+    required this.imageUrl,
+    required this.email,
+    required this.timeAgo,
+  });
 
   @override
   bool operator ==(Object other) {
@@ -199,7 +265,16 @@ class ContactTile extends StatelessWidget {
         backgroundImage: AssetImage(contact.imageUrl),
       ),
       title: Text(contact.name),
-      trailing: isSelected ? const Icon(Icons.check) : null,
+      subtitle: Row(
+        children: [
+          Expanded(
+            child: Text(
+              contact.timeAgo,
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ],
+      ),
       onTap: onTap,
     );
   }

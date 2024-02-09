@@ -22,7 +22,7 @@ class Discover extends StatelessWidget {
 }
 
 class CountryGrid extends StatelessWidget {
-  // Define a list of countries with their flags and names
+  CountryGrid({super.key});
   final List<Map<String, dynamic>> countries = [
     {"name": "USA", "image": "assets/images/US-Flag.webp", "cityCount": 4},
     {"name": "UK", "image": "assets/images/UK_Flag.jpg", "cityCount": 14},
@@ -36,7 +36,6 @@ class CountryGrid extends StatelessWidget {
       "image": "assets/images/Germany-flag.webp",
       "cityCount": 6
     },
-    // Add more countries as needed
   ];
 
   @override
@@ -45,7 +44,7 @@ class CountryGrid extends StatelessWidget {
       itemCount: countries.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: _getCrossAxisCount(context),
-        childAspectRatio: 3 / 2, // You can adjust the aspect ratio as needed
+        childAspectRatio: 3 / 2,
       ),
       itemBuilder: (BuildContext context, int index) {
         return CountryItem(
@@ -85,7 +84,7 @@ class CountryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10.0),
+      margin: const EdgeInsets.all(10.0),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.20,
         height: 50,

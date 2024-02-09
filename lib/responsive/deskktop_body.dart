@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:h3devs/createPost/createPost.dart';
 import 'package:h3devs/homePage/homePage.dart';
@@ -100,10 +101,12 @@ class HighlightCategory extends StatelessWidget {
         child: const AspectRatio(
           aspectRatio: 16 / 2,
           child: Text(
-            'This is for highlights category.',
+            'Highlight',
             style: TextStyle(
-                color: Color.fromARGB(255, 5, 5, 5),
-                fontWeight: FontWeight.bold),
+              color: Color.fromARGB(255, 5, 5, 5),
+              fontWeight: FontWeight.bold,
+              fontSize: 25, // Adjust font size as needed
+            ),
           ),
         ),
       );
@@ -116,24 +119,84 @@ class HighlightCategory extends StatelessWidget {
 }
 
 class HomeBody extends StatelessWidget {
-  const HomeBody({super.key});
+  const HomeBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Flexible(
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.635,
-        decoration: buildBoxDecoration(),
-        padding: const EdgeInsets.all(20.0),
-        child: const AspectRatio(
-          aspectRatio: 16 / 3,
-          child: Text(
-            'This is for the bodys',
-            style: TextStyle(
-                color: Color.fromARGB(255, 5, 5, 5),
-                fontWeight: FontWeight.bold),
-          ),
-        ),
+      child: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('listings').snapshots(),
+        builder: (context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (!snapshot.hasData ||
+              snapshot.data == null ||
+              snapshot.data!.docs.isEmpty) {
+            return Center(child: Text('No data found'));
+          }
+
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              final document = snapshot.data!.docs[index];
+              final data = document.data();
+              final List<dynamic>? images = data!['images'];
+              final description = data['description'];
+
+              if (images == null || images.isEmpty) {
+                return SizedBox(); // Skip if no images
+              }
+
+              return Container(
+                height: MediaQuery.of(context).size.height * 0.635,
+                decoration: buildBoxDecoration(),
+                padding: const EdgeInsets.all(20.0),
+                child: AspectRatio(
+                  aspectRatio: 16 / 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: images.length,
+                          itemBuilder: (context, index) {
+                            final imageUrl = images[index];
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.network(
+                                  imageUrl,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        description ?? '',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 5, 5, 5),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -269,26 +332,41 @@ class Sidebar extends StatelessWidget {
               const SizedBox(height: 10.0),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RealEstateForm()),
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            20.0, // Adjust radius as needed
+                          ),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              20.0, // Same as dialog border radius
+                            ),
+                            border: Border.all(
+                              color: Colors.grey, // Grey border color
+                              width: 2.0, // Border width
+                            ),
+                          ),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width *
+                                0.6, // Decreased width to 70% of screen width
+                            height: MediaQuery.of(context).size.height *
+                                0.7, // Increased height to 80% of screen height
+                            child: RealEstateForm(),
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
                 child: const ListTile(
                   minLeadingWidth: 30,
                   title: Text('Create a Post'),
                   leading: Icon(Icons.edit),
-                ),
-              ),
-              const SizedBox(height: 6.0),
-              GestureDetector(
-                onTap: () {
-                  const NotificationDrawer();
-                },
-                child: const ListTile(
-                  minLeadingWidth: 30,
-                  title: Text('Notification'),
-                  leading: Icon(Icons.notifications),
                 ),
               ),
               const SizedBox(height: 6.0),

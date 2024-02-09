@@ -177,10 +177,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           password: passwordController.text,
         );
 
-        String uid = userCredential.user!.uid;
-
         await FirebaseFirestore.instance.collection('users').add({
-          'uid': uid,
           'name': nameController.text,
           'email': emailController.text,
           'password': passwordController.text,

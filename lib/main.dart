@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:h3devs/chatsupport.dart';
+
 import 'package:h3devs/firebase_options.dart';
 import 'package:h3devs/homePage/homePage.dart';
 
@@ -23,9 +23,25 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'City Loads',
       theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white, // Set the AppBar color to white
+        ),
         primarySwatch: Colors.blue,
       ),
-      home: UserSelectionPage(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else {
+            if (snapshot.hasData) {
+              return const MyHomePage();
+            } else {
+              return const Login();
+            }
+          }
+        },
+      ),
     );
   }
 }

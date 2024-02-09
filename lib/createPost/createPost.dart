@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -42,122 +45,166 @@ class _RealEstateFormState extends State<RealEstateForm> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Card(
-              elevation: 4.0,
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                side: BorderSide(color: Colors.grey, width: 1.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    _buildTitle('Create Post'),
-                    SizedBox(height: 16.0),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 2.0,
-                      height: 16.0,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildLabeledTextField('Title', _titleController),
-                              SizedBox(height: 12.0),
-                              _buildLabeledTextField(
-                                  'Built', _yearBuiltController),
-                              SizedBox(height: 12.0),
-                              _buildLabeledTextField(
-                                  'Description', _descriptionController),
-                              SizedBox(height: 12.0),
-                              _buildLabeledTextField(
-                                  'Size in SQFT', _sizeController),
-                              SizedBox(height: 12.0),
-                              _buildLabeledTextField('Price', _priceController),
-                              SizedBox(height: 12.0),
-                              _buildLabeledTextField(
-                                  'Location', _locationController),
-                              _buildImageSelector()
-                            ],
+      debugShowCheckedModeBanner: false,
+      home: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0), // Adjust radius as needed
+          border: Border.all(
+            color: Colors.grey, // Grey border color
+            width: 2.0, // Border width
+          ),
+        ),
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      _buildTitle('Create Post'),
+                      SizedBox(height: 16.0),
+                      Divider(
+                        color: Colors.grey,
+                        thickness: 2.0,
+                        height: 16.0,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildLabeledTextField(
+                                    'Title', _titleController),
+                                SizedBox(height: 12.0),
+                                _buildLabeledTextField(
+                                    'Built', _yearBuiltController),
+                                SizedBox(height: 12.0),
+                                _buildLabeledTextField(
+                                    'Description', _descriptionController),
+                                SizedBox(height: 12.0),
+                                _buildLabeledTextField(
+                                    'Size in SQFT', _sizeController),
+                                SizedBox(height: 12.0),
+                                _buildLabeledTextField(
+                                    'Price', _priceController),
+                                SizedBox(height: 12.0),
+                                _buildLabeledTextField(
+                                    'Location', _locationController),
+                                _buildImageSelector()
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 16.0),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildTypeSelector(),
-                              _buildNumberInputWithLabel(
-                                  'Bedroom',
-                                  _bedroomCount,
-                                  _incrementBedroom,
-                                  _decrementBedroom,
-                                  Icons.king_bed),
-                              _buildNumberInputWithLabel(
-                                  'Baths',
-                                  _bathCount,
-                                  _incrementBath,
-                                  _decrementBath,
-                                  Icons.bathtub),
-                              _buildNumberInputWithLabel(
-                                  'Floor',
-                                  _floorCount,
-                                  _incrementFloor,
-                                  _decrementFloor,
-                                  Icons.layers),
-                              _buildLabeledCheckbox(
-                                  'Car Parking', _isCarParkingChecked,
-                                  (newValue) {
-                                setState(() {
-                                  _isCarParkingChecked = newValue ?? false;
-                                });
-                              }),
-                              _buildAvailableForCheckbox(),
-                              _buildLabeledCheckbox(
-                                  'Maid Room', _isMaidRoomChecked, (newValue) {
-                                setState(() {
-                                  _isMaidRoomChecked = newValue ?? false;
-                                });
-                              }),
-                              _buildInteriorCheckbox(),
-                              _isSubmitting
-                                  ? CircularProgressIndicator()
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: _isSubmitting
-                                              ? null
-                                              : () => _postListing(),
-                                          child: Text('Post'),
-                                        ),
-                                        SizedBox(width: 16.0),
-                                        ElevatedButton(
-                                          onPressed: _isSubmitting
-                                              ? null
-                                              : () => _discardPost(),
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Colors.red,
+                          SizedBox(width: 16.0),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildTypeSelector(),
+                                _buildNumberInputWithLabel(
+                                    'Bedroom',
+                                    _bedroomCount,
+                                    _incrementBedroom,
+                                    _decrementBedroom,
+                                    Icons.king_bed),
+                                _buildNumberInputWithLabel(
+                                    'Baths',
+                                    _bathCount,
+                                    _incrementBath,
+                                    _decrementBath,
+                                    Icons.bathtub),
+                                _buildNumberInputWithLabel(
+                                    'Floor',
+                                    _floorCount,
+                                    _incrementFloor,
+                                    _decrementFloor,
+                                    Icons.layers),
+                                _buildLabeledCheckbox(
+                                    'Car Parking', _isCarParkingChecked,
+                                    (newValue) {
+                                  setState(() {
+                                    _isCarParkingChecked = newValue ?? false;
+                                  });
+                                }),
+                                _buildAvailableForCheckbox(),
+                                _buildLabeledCheckbox(
+                                    'Maid Room', _isMaidRoomChecked,
+                                    (newValue) {
+                                  setState(() {
+                                    _isMaidRoomChecked = newValue ?? false;
+                                  });
+                                }),
+                                _buildInteriorCheckbox(),
+                                _isSubmitting
+                                    ? CircularProgressIndicator()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: _isSubmitting
+                                                ? null
+                                                : () {
+                                                    if (_selectedImages
+                                                        .isNotEmpty) {
+                                                      // Check if images are selected
+                                                      _postListing(); // Call _postListing if images are selected
+                                                    } else {
+                                                      // Show a message to the user indicating that images are required
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                              'Please select at least one image.'),
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Color(
+                                                  0xFF2D365C), // Background color
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(
+                                                    10), // Adjust border radius as needed
+                                              ),
+                                            ),
+                                            child: Text('Post'),
                                           ),
-                                          child: Text('Discard Post'),
-                                        ),
-                                      ],
-                                    ),
-                            ],
+                                          SizedBox(width: 16.0),
+                                          ElevatedButton(
+                                            onPressed: _isSubmitting
+                                                ? null
+                                                : () => _discardPost(),
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Colors
+                                                  .white, // Background color
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(
+                                                    20), // Adjust border radius as needed
+                                                side: BorderSide(
+                                                    color: Colors
+                                                        .grey), // Set border color
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Discard Post',
+                                              style: TextStyle(
+                                                  color: Colors
+                                                      .grey), // Text color
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -260,7 +307,7 @@ class _RealEstateFormState extends State<RealEstateForm> {
 
   Widget _buildTypeSelector() {
     return Container(
-      margin: EdgeInsets.only(bottom: 12.0),
+      margin: EdgeInsets.only(bottom: 16.0),
       child: Row(
         children: [
           Text(
@@ -276,9 +323,17 @@ class _RealEstateFormState extends State<RealEstateForm> {
               ElevatedButton(
                 onPressed: () => _showTypeDialog(),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.lightBlue,
+                  primary: Color(0xFF2D365C), // Background color #FF2D365C
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        30.0), // Adjust the radius as needed
+                  ),
+                  minimumSize:
+                      Size(38, 46), // Adjust the width and height as needed
                 ),
-                child: Text('Add New Type +'),
+                child: Text('Add New Type +',
+                    style:
+                        TextStyle(fontSize: 16)), // Adjust font size if needed
               ),
             ],
           ),
@@ -289,8 +344,17 @@ class _RealEstateFormState extends State<RealEstateForm> {
 
   Widget _buildTypeChip(String type) {
     return Chip(
+      labelPadding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
       label: Text(type),
+      deleteIconColor: Colors.black,
       onDeleted: () => _removeType(type),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+            28.0), // Adjust border radius for a rounder circular border
+        side: BorderSide(color: Colors.grey), // Set the border color
+      ),
+      visualDensity: VisualDensity.compact,
     );
   }
 
@@ -458,268 +522,232 @@ class _RealEstateFormState extends State<RealEstateForm> {
           'Images',
           style: TextStyle(fontSize: 14.0),
         ),
-        SizedBox(
-          height: 10,
+        SizedBox(height: 10),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: _selectedImages.map<Widget>((imagePath) {
+              if (imagePath is String) {
+                return Padding(
+                  padding: EdgeInsets.only(right: 8.0),
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        imagePath,
+                        width: 150,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      ),
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: IconButton(
+                          icon: Icon(Icons.remove_circle),
+                          onPressed: () => _removeSelectedImage(imagePath),
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return SizedBox.shrink(); // Handle null or unexpected type
+              }
+            }).toList(),
+          ),
         ),
-        Row(
-          children: [
-            ElevatedButton(
-              onPressed: () => _selectImages(),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.lightBlue,
-              ),
-              child: Text('Select Images'),
+        SizedBox(height: 10),
+        GestureDetector(
+          onTap: () => _selectImages(),
+          child: Container(
+            width: 150.0, // Adjust width as needed
+            height: 80.0, // Adjust height as needed
+            decoration: BoxDecoration(
+              color: Colors.grey,
             ),
-            SizedBox(width: 16.0),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    ..._selectedImages
-                        .map((imageUrl) => _buildSelectedImage(imageUrl)),
-                  ],
-                ),
+            child: Center(
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
               ),
             ),
-          ],
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildSelectedImage(String imageUrl) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
-      child: Stack(
-        children: [
-          kIsWeb
-              ? Image.network(
-                  imageUrl,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                )
-              : Image.file(
-                  File(imageUrl),
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-          Positioned(
-            top: 0,
-            right: 0,
-            child: IconButton(
-              icon: Icon(Icons.remove_circle),
-              onPressed: () => _removeSelectedImage(imageUrl),
-              color: Colors.red,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _removeSelectedImage(String imageUrl) {
+  void _removeSelectedImage(String imagePath) {
     setState(() {
-      _selectedImages.removeWhere((element) => element == imageUrl);
+      _selectedImages.remove(imagePath);
     });
   }
 
   Future<void> _selectImages() async {
-    List<XFile>? result;
+    List<String>? result;
 
     try {
-      result = await ImagePicker().pickMultiImage(
-        imageQuality: 80,
-      );
+      if (kIsWeb) {
+        final filePickerResult = await FilePicker.platform.pickFiles(
+          type: FileType.image,
+          allowMultiple: true,
+        );
+        if (filePickerResult != null) {
+          result = [];
+          for (var file in filePickerResult.files) {
+            if (file.bytes != null) {
+              result.add('data:image/jpeg;base64,${base64Encode(file.bytes!)}');
+            }
+          }
+        }
+      } else {
+        final picker = ImagePicker();
+        final pickedFiles = await picker.pickMultiImage();
+        if (pickedFiles != null) {
+          result = pickedFiles.map((file) => file.path).toList();
+        }
+      }
     } catch (e) {
-      // Handle exception if any
       print('Error selecting images: $e');
     }
 
     if (result != null && result.isNotEmpty) {
       setState(() {
-        _selectedImages.addAll(result!.map((image) => image.path).toList());
+        _selectedImages.addAll(result!);
       });
     }
   }
 
   Future<void> _postListing() async {
-    // Show circular indicator while submitting
     setState(() {
       _isSubmitting = true;
     });
 
     try {
-      // Validate input fields
-      if (_titleController.text.isEmpty ||
-          _yearBuiltController.text.isEmpty ||
-          _descriptionController.text.isEmpty ||
-          _sizeController.text.isEmpty ||
-          _priceController.text.isEmpty ||
-          _locationController.text.isEmpty ||
-          _selectedImages.isEmpty ||
-          _selectedTypes.isEmpty ||
-          (_isRentChecked == false && _isSaleChecked == false) ||
-          (_isFurnishedChecked == false && _isNotFurnishedChecked == false)) {
-        // Display an error message if any field is empty
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('All fields are required'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        setState(() {
-          _isSubmitting = false;
-        });
-        return;
-      }
+      final List<String> uploadedImageUrls =
+          await _uploadImages(_selectedImages);
 
-      // Generate a unique ID for the listing
-      String listingId = Uuid().v4();
-
-      // Upload images to Firebase Storage
-      List<String> imageUrls = await _uploadImages(listingId);
-
-      // Create a new listing document in Firestore
-      await _firestore.collection('listings').doc(listingId).set({
-        'title': _titleController.text,
-        'yearBuilt': _yearBuiltController.text,
-        'description': _descriptionController.text,
-        'size': _sizeController.text,
-        'price': _priceController.text,
-        'location': _locationController.text,
-        'images': imageUrls,
+      final Map<String, dynamic> data = {
+        'title': _titleController.text.trim(),
+        'yearBuilt': _yearBuiltController.text.trim(),
+        'description': _descriptionController.text.trim(),
+        'size': _sizeController.text.trim(),
+        'price': _priceController.text.trim(),
+        'location': _locationController.text.trim(),
+        'type': _selectedTypes,
         'bedrooms': _bedroomCount,
         'baths': _bathCount,
         'floor': _floorCount,
         'carParking': _isCarParkingChecked,
         'rent': _isRentChecked,
         'sale': _isSaleChecked,
-        'furnished': _isFurnishedChecked,
         'maidRoom': _isMaidRoomChecked,
+        'furnished': _isFurnishedChecked,
         'notFurnished': _isNotFurnishedChecked,
-        'types': _selectedTypes,
+        'images': uploadedImageUrls,
+      };
+
+      await _firestore.collection('listings').add(data);
+
+      setState(() {
+        _isSubmitting = false;
+        _selectedImages.clear();
+        _titleController.clear();
+        _yearBuiltController.clear();
+        _descriptionController.clear();
+        _sizeController.clear();
+        _priceController.clear();
+        _locationController.clear();
+        _selectedTypes.clear();
+        _bedroomCount = 0;
+        _bathCount = 0;
+        _floorCount = 0;
+        _isCarParkingChecked = false;
+        _isRentChecked = false;
+        _isSaleChecked = false;
+        _isFurnishedChecked = false;
+        _isNotFurnishedChecked = false;
+        _isMaidRoomChecked = false;
       });
 
-      // Display success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Listing posted successfully'),
-          backgroundColor: Colors.green,
         ),
       );
-
-      // Reset the form
-      _resetForm();
     } catch (e) {
-      // Display an error message if something goes wrong
       print('Error posting listing: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error posting listing. Please try again.'),
-          backgroundColor: Colors.red,
-        ),
-      );
       setState(() {
         _isSubmitting = false;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to post listing. Please try again later.'),
+        ),
+      );
     }
   }
 
-  Future<List<String>> _uploadImages(String listingId) async {
-    List<String> imageUrls = [];
+  Future<List<String>> _uploadImages(List<String> paths) async {
+    List<String> uploadedImageUrls = [];
 
-    try {
-      // Upload each selected image to Firebase Storage
-      for (String imagePath in _selectedImages) {
-        File imageFile = File(imagePath);
-        String fileName = 'images/$listingId/${Uuid().v4()}';
-        Reference storageReference =
-            FirebaseStorage.instance.ref().child(fileName);
-        await storageReference.putFile(imageFile);
-        String imageUrl = await storageReference.getDownloadURL();
-        imageUrls.add(imageUrl);
+    for (String imagePath in paths) {
+      try {
+        if (!kIsWeb) {
+          // Handling local file paths
+          final uuid = Uuid();
+          final String imageId = uuid.v4();
+          final Reference firebaseStorageRef = FirebaseStorage.instance
+              .ref()
+              .child('post') // Change folder name to 'post'
+              .child('$imageId.jpg');
+          final UploadTask uploadTask =
+              firebaseStorageRef.putFile(File(imagePath));
+          await uploadTask; // Wait for the upload to complete
+          final String downloadUrl = await firebaseStorageRef.getDownloadURL();
+          uploadedImageUrls.add(downloadUrl);
+        } else {
+          // Handling base64 encoded strings for web
+          final bytes = Base64Decoder()
+              .convert(imagePath.replaceFirst('data:image/jpeg;base64,', ''));
+          final uuid = Uuid();
+          final String imageId = uuid.v4();
+          final Reference firebaseStorageRef = FirebaseStorage.instance
+              .ref()
+              .child('post') // Change folder name to 'post'
+              .child('$imageId.jpg');
+          final UploadTask uploadTask = firebaseStorageRef.putData(bytes);
+          await uploadTask; // Wait for the upload to complete
+          final String downloadUrl = await firebaseStorageRef.getDownloadURL();
+          uploadedImageUrls.add(downloadUrl);
+        }
+      } catch (e) {
+        print('Error uploading image: $e');
       }
-    } catch (e) {
-      print('Error uploading images: $e');
-      throw Exception('Error uploading images');
     }
 
-    return imageUrls;
-  }
-
-  void _resetForm() {
-    // Clear all text controllers
-    _titleController.clear();
-    _yearBuiltController.clear();
-    _descriptionController.clear();
-    _sizeController.clear();
-    _priceController.clear();
-    _locationController.clear();
-    _typeController.clear();
-
-    // Reset numeric input fields
-    setState(() {
-      _bedroomCount = 0;
-      _bathCount = 0;
-      _floorCount = 0;
-    });
-
-    // Reset checkboxes
-    setState(() {
-      _isCarParkingChecked = false;
-      _isRentChecked = false;
-      _isSaleChecked = false;
-      _isFurnishedChecked = false;
-      _isNotFurnishedChecked = false;
-      _isMaidRoomChecked = false;
-    });
-
-    // Clear selected images and types
-    setState(() {
-      _selectedImages.clear();
-      _selectedTypes.clear();
-    });
-
-    // Reset submitting state
-    setState(() {
-      _isSubmitting = false;
-    });
+    return uploadedImageUrls;
   }
 
   void _discardPost() {
-    // Clear all text controllers
-    _titleController.clear();
-    _yearBuiltController.clear();
-    _descriptionController.clear();
-    _sizeController.clear();
-    _priceController.clear();
-    _locationController.clear();
-    _typeController.clear();
-
-    // Reset numeric input fields
     setState(() {
+      _titleController.clear();
+      _yearBuiltController.clear();
+      _descriptionController.clear();
+      _sizeController.clear();
+      _priceController.clear();
+      _locationController.clear();
+      _selectedImages.clear();
+      _selectedTypes.clear();
       _bedroomCount = 0;
       _bathCount = 0;
       _floorCount = 0;
-    });
-
-    // Reset checkboxes
-    setState(() {
       _isCarParkingChecked = false;
       _isRentChecked = false;
       _isSaleChecked = false;
       _isFurnishedChecked = false;
       _isNotFurnishedChecked = false;
       _isMaidRoomChecked = false;
-    });
-
-    // Clear selected images and types
-    setState(() {
-      _selectedImages.clear();
-      _selectedTypes.clear();
     });
   }
 
@@ -730,9 +758,11 @@ class _RealEstateFormState extends State<RealEstateForm> {
   }
 
   void _decrementBedroom() {
-    setState(() {
-      _bedroomCount = (_bedroomCount > 0) ? _bedroomCount - 1 : 0;
-    });
+    if (_bedroomCount > 0) {
+      setState(() {
+        _bedroomCount--;
+      });
+    }
   }
 
   void _incrementBath() {
@@ -742,9 +772,11 @@ class _RealEstateFormState extends State<RealEstateForm> {
   }
 
   void _decrementBath() {
-    setState(() {
-      _bathCount = (_bathCount > 0) ? _bathCount - 1 : 0;
-    });
+    if (_bathCount > 0) {
+      setState(() {
+        _bathCount--;
+      });
+    }
   }
 
   void _incrementFloor() {
@@ -754,8 +786,16 @@ class _RealEstateFormState extends State<RealEstateForm> {
   }
 
   void _decrementFloor() {
-    setState(() {
-      _floorCount = (_floorCount > 0) ? _floorCount - 1 : 0;
-    });
+    if (_floorCount > 0) {
+      setState(() {
+        _floorCount--;
+      });
+    }
   }
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(RealEstateForm());
 }

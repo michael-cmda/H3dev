@@ -6,38 +6,55 @@ class MyMobileBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple[200],
+      backgroundColor: const Color.fromARGB(255, 242, 238, 232),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            // youtube video
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: Container(
-                  color: Colors.deepPurple[400],
-                ),
-              ),
-            ),
-
             // comment section & recommended videos
             Expanded(
               child: ListView.builder(
                 itemCount: 8,
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      color: Colors.deepPurple[300],
-                      height: 120,
-                    ),
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: HomeBody(),
                   );
                 },
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+BoxDecoration buildBoxDecoration() {
+  return BoxDecoration(
+    color: const Color.fromARGB(255, 255, 255, 255),
+    borderRadius: BorderRadius.circular(16.0),
+  );
+}
+
+class HomeBody extends StatelessWidget {
+  const HomeBody({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.635,
+        decoration: buildBoxDecoration(),
+        padding: const EdgeInsets.all(20.0),
+        child: const AspectRatio(
+          aspectRatio: 16 / 3,
+          child: Text(
+            'Minimized Content :D',
+            style: TextStyle(
+                color: Color.fromARGB(255, 5, 5, 5),
+                fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );

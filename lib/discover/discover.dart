@@ -44,19 +44,29 @@ class CountryGrid extends StatelessWidget {
     return GridView.builder(
       itemCount: countries.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4, // Number of columns
-        childAspectRatio: 1.0, // Aspect ratio of each item
+        crossAxisCount: _getCrossAxisCount(context),
+        childAspectRatio: 3 / 2, // You can adjust the aspect ratio as needed
       ),
       itemBuilder: (BuildContext context, int index) {
-        return Expanded(
-          child: CountryItem(
-            name: countries[index]["name"],
-            image: countries[index]["image"],
-            cityCount: countries[index]["cityCount"],
-          ),
+        return CountryItem(
+          name: countries[index]["name"],
+          image: countries[index]["image"],
+          cityCount: countries[index]["cityCount"],
         );
       },
     );
+  }
+
+  // Function to determine the cross axis count based on screen size
+  int _getCrossAxisCount(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    if (screenWidth < 600) {
+      return 1; // For small screens, show one box per row
+    } else if (screenWidth < 1200) {
+      return 2; // For medium screens, show two boxes per row
+    } else {
+      return 4; // For large screens, show three boxes per row
+    }
   }
 }
 
@@ -112,7 +122,7 @@ class CountryItem extends StatelessWidget {
                       Text(
                         name,
                         style: const TextStyle(
-                          fontSize: 32,
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                           letterSpacing: 1.5,

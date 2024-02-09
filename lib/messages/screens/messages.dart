@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:h3devs/messages/screens/chatPage.dart';
 
@@ -9,17 +10,49 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
-  final List<Contact> contacts = [
-    const Contact(name: 'Noice', imageUrl: 'assets/images/profile1.png'),
-    const Contact(name: 'H3 Devs', imageUrl: 'assets/images/profile2.png'),
-    const Contact(name: 'Not Funny', imageUrl: 'assets/images/profile3.png'),
-  ];
-
-  List<Message> messages = [
-    const Message(sender: 'Sender ', text: 'Hey there!'),
-  ];
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late String currentUserEmail;
+  List<Contact> recentContacts = [];
   Contact? selectedContact;
+
+  @override
+  void initState() {
+    super.initState();
+   
+    currentUserEmail = "shanti@test.com"; 
+   
+    fetchRecentChats();
+  }
+
+  Future<void> fetchRecentChats() async {
+    try {
+      QuerySnapshot chatSnapshot = await _firestore
+          .collection('messages')
+          .where('users', arrayContains: currentUserEmail)
+          .get();
+      List<Contact> contacts = [];
+      chatSnapshot.docs.forEach((chatDoc) {
+     
+        List<dynamic> users = chatDoc['users'];
+        String otherUserEmail =
+            users.firstWhere((user) => user != currentUserEmail);
+     
+        Contact contact = Contact(
+            name: otherUserEmail.split('@')[0],
+            email: otherUserEmail,
+            imageUrl: ''); 
+        if (!contacts.contains(contact)) {
+          contacts.add(contact);
+        }
+      });
+
+      setState(() {
+        recentContacts = contacts;
+      });
+    } catch (e) {
+      print("Error fetching recent chats: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +90,19 @@ class _MessagesState extends State<Messages> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: contacts.length,
+            itemCount:
+                recentContacts.length, 
             itemBuilder: (context, index) {
-              final contact = contacts[index];
+              final contact = recentContacts[index];
               return ContactTile(
                 contact: contact,
                 isSelected: contact == selectedContact,
-                onTap: () => setState(() => selectedContact = contact),
+                onTap: () {
+                  setState(() {
+                    selectedContact =
+                        contact; 
+                  });
+                },
               );
             },
           ),
@@ -103,10 +142,7 @@ class _MessagesState extends State<Messages> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatPage(
-                          userName: '',
-                          userEmail: '',
-                        ),
+                        builder: (context) => UserSelectionPage(),
                       ),
                     );
                   },
@@ -123,28 +159,26 @@ class _MessagesState extends State<Messages> {
               ],
             ),
           )
-        : ListView.builder(
-            itemCount: messages.length,
-            itemBuilder: (context, index) {
-              final message = messages[index];
-              return MessageBubble(message: message);
-            },
-          );
+        : Container(); 
   }
 }
 
 class Contact {
   final String name;
   final String imageUrl;
+  final String email;
 
-  const Contact({required this.name, required this.imageUrl});
-}
+  const Contact(
+      {required this.name, required this.imageUrl, required this.email});
 
-class Message {
-  final String sender;
-  final String text;
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Contact && this.email == other.email;
+  }
 
-  const Message({required this.sender, required this.text});
+  @override
+  int get hashCode => email.hashCode;
 }
 
 class ContactTile extends StatelessWidget {
@@ -167,32 +201,6 @@ class ContactTile extends StatelessWidget {
       title: Text(contact.name),
       trailing: isSelected ? const Icon(Icons.check) : null,
       onTap: onTap,
-    );
-  }
-}
-
-class MessageBubble extends StatelessWidget {
-  final Message message;
-
-  const MessageBubble({required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          if (message.sender == 'You') const Spacer(),
-          const CircleAvatar(
-            backgroundImage: AssetImage('assets/images/profile1.png'),
-          ),
-          const SizedBox(width: 8.0),
-          Expanded(
-            child: Text(message.text),
-          ),
-          if (message.sender != 'You') const Spacer(),
-        ],
-      ),
     );
   }
 }

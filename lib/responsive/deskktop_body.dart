@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:h3devs/createPost/createPost.dart';
+import 'package:h3devs/discover/discover.dart';
 import 'package:h3devs/homePage/homePage.dart';
 import 'package:h3devs/messages/screens/messages.dart';
 import 'package:h3devs/notification/notificationDrawer.dart';
@@ -313,7 +314,12 @@ class Sidebar extends StatelessWidget {
               ),
               const SizedBox(height: 6.0),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Discover()));
+                },
                 child: const ListTile(
                   minLeadingWidth: 30,
                   title: Text('Discover'),

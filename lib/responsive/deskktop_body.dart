@@ -515,11 +515,12 @@ class Sidebar extends StatelessWidget {
               ),
               const SizedBox(height: 6.0),
               GestureDetector(
-                onTap: () {Navigator.push(
+                onTap: () {
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ProfilePage()),
                   );
-                  },
+                },
                 child: const ListTile(
                   minLeadingWidth: 30,
                   title: Text('Profile'),

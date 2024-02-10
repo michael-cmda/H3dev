@@ -6,6 +6,7 @@ import 'package:h3devs/homePage/homePage.dart';
 import 'package:h3devs/latestNews/latestNews.dart';
 import 'package:h3devs/messages/screens/messages.dart';
 import 'package:h3devs/notification/notificationDrawer.dart';
+import 'package:h3devs/profile/profile.dart';
 import 'package:h3devs/search/searchDrawer.dart';
 
 class MyDesktopBody extends StatelessWidget {
@@ -514,7 +515,11 @@ class Sidebar extends StatelessWidget {
               ),
               const SizedBox(height: 6.0),
               GestureDetector(
-                onTap: () {},
+                onTap: () {Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfilePage()),
+                  );
+                  },
                 child: const ListTile(
                   minLeadingWidth: 30,
                   title: Text('Profile'),

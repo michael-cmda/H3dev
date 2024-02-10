@@ -48,7 +48,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Registration',
           style: TextStyle(color: Colors.black),
         ),
@@ -65,94 +65,126 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 child: Image.asset('assets/images/phone.png'),
               ),
             ),
-            SizedBox(width: 16), 
+            const SizedBox(width: 16),
             Expanded(
               flex: 2,
-              child: FractionallySizedBox(
-                widthFactor: 0.6, // Adjust this value as needed
-                child: Card(
-                  elevation: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                   Center(
-  child: Text(
-    'Create your account',
-    style: TextStyle(
-      fontSize: 20, // Change the font size as needed
-      fontWeight: FontWeight.bold,
-    ),
-  ),
-),
-                          SizedBox(height: 12),
-                          imageBytes != null
-                              ? GestureDetector(
-                                  onTap: pickImage,
-                                  child: SizedBox(
-                                    height: 200,
-                                    width: 200,
-                                    child: Image.memory(
-                                      imageBytes!,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  height: 100,
-                                  width: 100,
-                                  color: Colors.grey[200],
-                                  child: Icon(Icons.image, size: 100, color: Colors.grey),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 120,
+                ),
+                child: FractionallySizedBox(
+                  widthFactor: 0.6, // Adjust this value as needed
+                  child: Card(
+                    elevation: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const Center(
+                              child: Text(
+                                'Create your account',
+                                style: TextStyle(
+                                  fontSize:
+                                      20, // Change the font size as needed
+                                  fontWeight: FontWeight.bold,
                                 ),
-                          SizedBox(height: 12),
-                          ElevatedButton(
-                            onPressed: pickImage,
-                            child: Text('Select Image'),
-                          ),
-                          TextField(
-                            controller: nameController,
-                            decoration: InputDecoration(labelText: 'Name'),
-                          ),
-                          SizedBox(height: 12),
-                          TextField(
-                            controller: emailController,
-                            decoration: InputDecoration(labelText: 'Email'),
-                            keyboardType: TextInputType.emailAddress,
-                          ),
-                          SizedBox(height: 12),
-                          TextField(
-                            controller: passwordController,
-                            decoration: InputDecoration(labelText: 'Password'),
-                            obscureText: true,
-                          ),
-                          SizedBox(height: 12),
-                          TextField(
-                            controller: confirmPasswordController,
-                            decoration: InputDecoration(labelText: 'Confirm Password'),
-                            obscureText: true,
-                          ),
-                          SizedBox(height: 12),
-                          TextField(
-                            controller: ageController,
-                            decoration: InputDecoration(labelText: 'Age'),
-                            keyboardType: TextInputType.number,
-                          ),
-                          SizedBox(height: 12),
-                          TextField(
-                            controller: addressController,
-                            decoration: InputDecoration(labelText: 'Address'),
-                            maxLines: null,
-                          ),
-                          SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: () async {
-                              await _registerUser();
-                            },
-                            child: Text('Register'),
-                          ),
-                        ],
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            InkWell(
+                              onTap: pickImage,
+                              customBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Container(
+                                height: 150,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey[200],
+                                ),
+                                child: Center(
+                                  child: imageBytes != null
+                                      ? ClipOval(
+                                          child: SizedBox(
+                                            height: 140,
+                                            width: 140,
+                                            child: Image.memory(
+                                              imageBytes!,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        )
+                                      : const Icon(
+                                          Icons.image,
+                                          size: 70,
+                                          color: Colors.grey,
+                                        ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            // ElevatedButton(
+                            //   onPressed: pickImage,
+                            //   child: const Text('Select Image'),
+                            // ),
+                            TextField(
+                              controller: nameController,
+                              decoration:
+                                  const InputDecoration(labelText: 'Name'),
+                            ),
+                            const SizedBox(height: 12),
+                            TextField(
+                              controller: emailController,
+                              decoration:
+                                  const InputDecoration(labelText: 'Email'),
+                              keyboardType: TextInputType.emailAddress,
+                            ),
+                            const SizedBox(height: 12),
+                            TextField(
+                              controller: passwordController,
+                              decoration:
+                                  const InputDecoration(labelText: 'Password'),
+                              obscureText: true,
+                            ),
+                            const SizedBox(height: 12),
+                            TextField(
+                              controller: confirmPasswordController,
+                              decoration: const InputDecoration(
+                                  labelText: 'Confirm Password'),
+                              obscureText: true,
+                            ),
+                            const SizedBox(height: 12),
+                            TextField(
+                              controller: ageController,
+                              decoration:
+                                  const InputDecoration(labelText: 'Age'),
+                              keyboardType: TextInputType.number,
+                            ),
+                            const SizedBox(height: 12),
+                            TextField(
+                              controller: addressController,
+                              decoration:
+                                  const InputDecoration(labelText: 'Address'),
+                              maxLines: null,
+                            ),
+                            const SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: () async {
+                                await _registerUser();
+                              },
+                              child: const Text('Register'),
+                              style: ButtonStyle(
+                                fixedSize: MaterialStateProperty.all<Size>(
+                                  const Size(200,
+                                      55), // Adjust width and height as needed
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -186,7 +218,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       if (_validateInputs()) {
         if (passwordController.text != confirmPasswordController.text) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Passwords do not match.'),
             ),
           );
@@ -221,7 +253,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Registration Successful!'),
           ),
         );
@@ -243,7 +275,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ageController.text.isEmpty ||
         addressController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Please fill all fields.'),
         ),
       );

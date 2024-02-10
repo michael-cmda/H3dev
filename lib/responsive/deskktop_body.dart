@@ -92,34 +92,95 @@ BoxDecoration buildBoxDecoration() {
 }
 
 class HighlightCategory extends StatelessWidget {
-  const HighlightCategory({super.key});
+  const HighlightCategory({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    if (screenHeight >= 580) {
-      return Container(
-        height: MediaQuery.of(context).size.height * 0.25,
-        decoration: buildBoxDecoration(),
-        padding: const EdgeInsets.all(20.0),
-        child: const AspectRatio(
-          aspectRatio: 16 / 2,
-          child: Text(
-            'Highlight',
-            style: TextStyle(
-              color: Color.fromARGB(255, 5, 5, 5),
-              fontWeight: FontWeight.bold,
-              fontSize: 25, // Adjust font size as needed
-            ),
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('listings').snapshots(),
+      builder: (context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        if (!snapshot.hasData ||
+            snapshot.data == null ||
+            snapshot.data!.docs.isEmpty) {
+          return SizedBox.shrink(); // No data found
+        }
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0), // Rounded border
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 3,
+                offset: Offset(0, 2), // changes position of shadow
+              ),
+            ],
           ),
-        ),
-      );
-    } else {
-      // Provide a default return statement
-      return const SizedBox
-          .shrink(); // You can use SizedBox.shrink() or any other widget here.
-    }
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Highlight',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 5, 5, 5),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25, // Adjust font size as needed
+                ),
+              ),
+              SizedBox(height: 10),
+              SizedBox(
+                height:
+                    MediaQuery.of(context).size.height * 0.15, // Reduced height
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    final document = snapshot.data!.docs[index];
+                    final data = document.data();
+                    final List<dynamic>? images = data!['images'];
+
+                    if (images == null || images.isEmpty) {
+                      return SizedBox.shrink(); // Skip if no images
+                    }
+
+                    int maxImagesToShow = 5;
+                    double itemWidth =
+                        MediaQuery.of(context).size.width / maxImagesToShow;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: SizedBox(
+                        width: itemWidth < 100
+                            ? itemWidth
+                            : 100, // Set a minimum width of 100
+                        child: ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(10.0), // Rounded border
+                          child: Image.network(
+                            images[0], // Fetching only the first image
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 

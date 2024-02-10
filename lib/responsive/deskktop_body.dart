@@ -448,7 +448,7 @@ class Sidebar extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => ListingImagesPage(),
+                      builder: (context) => MyHomePage(),
                     ),
                   );
                 },

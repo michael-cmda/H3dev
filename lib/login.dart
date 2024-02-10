@@ -48,13 +48,13 @@ class _LoginState extends State<Login> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: isMobile
-          ? Color.fromARGB(255, 255, 255, 255)
-          : Color.fromARGB(255, 247, 246, 246),
+          ? const Color.fromARGB(255, 255, 255, 255)
+          : const Color.fromARGB(255, 247, 246, 246),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
             child: Container(
-              constraints: BoxConstraints(maxWidth: 1300),
+              constraints: const BoxConstraints(maxWidth: 1300),
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: isWeb
                   ? Row(
@@ -67,7 +67,7 @@ class _LoginState extends State<Login> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(height: 30),
+                                const SizedBox(height: 30),
                                 Image.asset(
                                   'assets/images/phone.png',
                                   height: 900,
@@ -92,7 +92,7 @@ class _LoginState extends State<Login> {
                               ),
                               child: Card(
                                 elevation: 3,
-                                color: Color.fromARGB(255, 247, 246, 246),
+                                color: const Color.fromARGB(255, 247, 246, 246),
                                 child: Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(40, 40, 20, 20),
@@ -101,7 +101,7 @@ class _LoginState extends State<Login> {
                                         CrossAxisAlignment.stretch,
                                     children: [
                                       Image.asset(
-                                        'assets/images/logo1.png',
+                                        'assets/images/logo_nobg.png',
                                         height:
                                             100, // Adjust the height as needed
                                         width:
@@ -114,10 +114,10 @@ class _LoginState extends State<Login> {
                                           text: TextSpan(
                                             style: GoogleFonts.ubuntu(
                                               // Use the Google Fonts style
-                                              color: Color(0xFF0D47A1),
+                                              color: const Color(0xFF0D47A1),
                                               fontSize: 25,
                                             ),
-                                            children: [
+                                            children: const [
                                               TextSpan(
                                                 text: 'CITY ',
                                               ),
@@ -137,7 +137,7 @@ class _LoginState extends State<Login> {
                                           'Worlds Properties',
                                           style: GoogleFonts.ubuntu(
                                             // Use the Google Fonts style
-                                            color: Color(0xFF0D47A1),
+                                            color: const Color(0xFF0D47A1),
                                             fontSize: 20,
                                             letterSpacing: 3.0,
                                             fontWeight: FontWeight.bold,
@@ -194,7 +194,7 @@ class _LoginState extends State<Login> {
                                             // Implement the logic for "Forgot Password" here
                                             print('Forgot Password tapped');
                                           },
-                                          child: Align(
+                                          child: const Align(
                                             alignment: Alignment.centerRight,
                                             child: Text(
                                               'Forgot Password?',
@@ -216,22 +216,23 @@ class _LoginState extends State<Login> {
                                         style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all<Color>(
-                                            Color.fromARGB(255, 38, 58, 88),
+                                            const Color.fromARGB(
+                                                255, 38, 58, 88),
                                           ),
                                           padding: MaterialStateProperty.all<
                                               EdgeInsetsGeometry>(
-                                            EdgeInsets.symmetric(
+                                            const EdgeInsets.symmetric(
                                                 vertical: 20, horizontal: 1),
                                           ),
                                           textStyle: MaterialStateProperty.all<
                                               TextStyle>(
-                                            TextStyle(fontSize: 20),
+                                            const TextStyle(fontSize: 20),
                                           ),
                                         ),
                                         child: Text(
                                           'Sign in',
                                           style: GoogleFonts.ubuntu(
-                                            color: Color.fromARGB(
+                                            color: const Color.fromARGB(
                                                 255, 255, 255, 255),
                                             fontSize: 20,
                                             letterSpacing: 3.0,
@@ -242,7 +243,7 @@ class _LoginState extends State<Login> {
                                       ),
 
                                       const SizedBox(height: 20),
-                                      Row(
+                                      const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
@@ -253,7 +254,7 @@ class _LoginState extends State<Login> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(
+                                            padding: EdgeInsets.symmetric(
                                                 horizontal: 10),
                                             child: Text(
                                               'or',
@@ -282,14 +283,14 @@ class _LoginState extends State<Login> {
                                               backgroundColor:
                                                   MaterialStateProperty.all<
                                                           Color>(
-                                                      Color.fromARGB(
+                                                      const Color.fromARGB(
                                                           255, 255, 7, 7)),
                                             ),
-                                            icon: Icon(
+                                            icon: const Icon(
                                                 Icons.g_mobiledata_rounded),
-                                            label: Text('Google'),
+                                            label: const Text('Google'),
                                           ),
-                                          SizedBox(width: 10),
+                                          const SizedBox(width: 10),
                                           ElevatedButton.icon(
                                             onPressed: _signInWithFacebook,
                                             style: ButtonStyle(
@@ -297,8 +298,8 @@ class _LoginState extends State<Login> {
                                                   MaterialStateProperty.all<
                                                       Color>(Colors.blue),
                                             ),
-                                            icon: Icon(Icons.facebook),
-                                            label: Text('Facebook'),
+                                            icon: const Icon(Icons.facebook),
+                                            label: const Text('Facebook'),
                                           ),
                                         ],
                                       ),
@@ -314,7 +315,7 @@ class _LoginState extends State<Login> {
                                           _showAgreementDialog(
                                               context); // Show the Agreement dialog
                                         },
-                                        child: Padding(
+                                        child: const Padding(
                                           padding: EdgeInsets.only(bottom: 5),
                                           child: Row(
                                             mainAxisAlignment:
@@ -345,13 +346,13 @@ class _LoginState extends State<Login> {
                                           ),
                                         ),
                                       ),
-                                      Divider(
+                                      const Divider(
                                         color: Colors.black,
                                         height: 36,
                                       ),
 
-                                      Center(
-                                        child: const Text(
+                                      const Center(
+                                        child: Text(
                                           'Get the App',
                                           style: TextStyle(
                                             color: Color(0xFF0D47A1),
@@ -377,7 +378,7 @@ class _LoginState extends State<Login> {
                                               width: 200,
                                             ),
                                           ),
-                                          SizedBox(width: 20),
+                                          const SizedBox(width: 20),
                                           GestureDetector(
                                             onTap: () {
                                               // Navigate to Play Store
@@ -400,8 +401,8 @@ class _LoginState extends State<Login> {
                         ),
                       ],
                     )
-                  : Padding(
-                      padding: const EdgeInsets.only(top: 60),
+                  : const Padding(
+                      padding: EdgeInsets.only(top: 60),
                     ),
             ),
           ),
@@ -433,56 +434,59 @@ class _LoginState extends State<Login> {
     }
   }
 
- Future<void> _signInWithGoogle() async {
-  try {
-    final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-    if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
-      final UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(credential);
-      final User? user = authResult.user;
+  Future<void> _signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+          await _googleSignIn.signIn();
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken,
+        );
+        final UserCredential authResult =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+        final User? user = authResult.user;
 
-      if (user != null) {
-        _redirectToNewPage();
-        print('Google Sign-In Successful. User: $user');
-      } else {
-        print('Google Sign-In Failed.');
+        if (user != null) {
+          _redirectToNewPage();
+          print('Google Sign-In Successful. User: $user');
+        } else {
+          print('Google Sign-In Failed.');
+        }
       }
+    } catch (error) {
+      print('Google Sign-In Error: $error');
     }
-  } catch (error) {
-    print('Google Sign-In Error: $error');
   }
-}
 
+  Future<void> _signInWithFacebook() async {
+    try {
+      final LoginResult result = await FacebookAuth.instance.login();
 
-Future<void> _signInWithFacebook() async {
-  try {
-    final LoginResult result = await FacebookAuth.instance.login();
+      if (result.status == LoginStatus.success) {
+        final AccessToken accessToken = result.accessToken!;
+        final AuthCredential credential =
+            FacebookAuthProvider.credential(accessToken.token);
 
-    if (result.status == LoginStatus.success) {
-      final AccessToken accessToken = result.accessToken!;
-      final AuthCredential credential = FacebookAuthProvider.credential(accessToken.token);
+        final UserCredential authResult =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+        final User? user = authResult.user;
 
-      final UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(credential);
-      final User? user = authResult.user;
-
-      if (user != null) {
-        _redirectToNewPage();
-        print('Facebook Login Successful. User: $user');
+        if (user != null) {
+          _redirectToNewPage();
+          print('Facebook Login Successful. User: $user');
+        } else {
+          print('Facebook Login Failed.');
+        }
       } else {
-        print('Facebook Login Failed.');
+        print('Facebook Login Cancelled.');
       }
-    } else {
-      print('Facebook Login Cancelled.');
+    } catch (error) {
+      print('Facebook Login Error: $error');
     }
-  } catch (error) {
-    print('Facebook Login Error: $error');
   }
-}
-
 
   // ...
 
@@ -503,9 +507,9 @@ void _showAgreementDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Terms and Conditions',
+        title: const Text('Terms and Conditions',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        content: Column(
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -523,20 +527,21 @@ void _showAgreementDialog(BuildContext context) {
             style: TextButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            child: Text('No', style: TextStyle(color: Colors.white)),
+            child: const Text('No', style: TextStyle(color: Colors.white)),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RegistrationPage()),
+                MaterialPageRoute(
+                    builder: (context) => const RegistrationPage()),
               );
             },
             style: TextButton.styleFrom(
               backgroundColor: Colors.blue,
             ),
-            child: Text('Yes', style: TextStyle(color: Colors.white)),
+            child: const Text('Yes', style: TextStyle(color: Colors.white)),
           ),
         ],
       );

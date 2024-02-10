@@ -102,7 +102,7 @@ class HighlightCategory extends StatelessWidget {
       builder: (context,
           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         }
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -110,7 +110,7 @@ class HighlightCategory extends StatelessWidget {
         if (!snapshot.hasData ||
             snapshot.data == null ||
             snapshot.data!.docs.isEmpty) {
-          return SizedBox.shrink(); // No data found
+          return const SizedBox.shrink(); // No data found
         }
 
         return Container(
@@ -122,7 +122,7 @@ class HighlightCategory extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 2,
                 blurRadius: 3,
-                offset: Offset(0, 2), // changes position of shadow
+                offset: const Offset(0, 2), // changes position of shadow
               ),
             ],
           ),
@@ -130,7 +130,7 @@ class HighlightCategory extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Highlight',
                 style: TextStyle(
                   color: Color.fromARGB(255, 5, 5, 5),
@@ -138,7 +138,7 @@ class HighlightCategory extends StatelessWidget {
                   fontSize: 25, // Adjust font size as needed
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SizedBox(
                 height:
                     MediaQuery.of(context).size.height * 0.15, // Reduced height
@@ -151,7 +151,7 @@ class HighlightCategory extends StatelessWidget {
                     final List<dynamic>? images = data!['images'];
 
                     if (images == null || images.isEmpty) {
-                      return SizedBox.shrink(); // Skip if no images
+                      return const SizedBox.shrink(); // Skip if no images
                     }
 
                     int maxImagesToShow = 5;
@@ -196,7 +196,7 @@ class HomeBody extends StatelessWidget {
         builder: (context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -204,7 +204,7 @@ class HomeBody extends StatelessWidget {
           if (!snapshot.hasData ||
               snapshot.data == null ||
               snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No data found'));
+            return const Center(child: Text('No data found'));
           }
 
           return ListView.builder(
@@ -216,7 +216,7 @@ class HomeBody extends StatelessWidget {
               final description = data['description'];
 
               if (images == null || images.isEmpty) {
-                return SizedBox(); // Skip if no images
+                return const SizedBox(); // Skip if no images
               }
 
               return Container(
@@ -231,12 +231,12 @@ class HomeBody extends StatelessWidget {
                   children: [
                     Text(
                       description ?? '',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color.fromARGB(255, 5, 5, 5),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -257,7 +257,7 @@ class HomeBody extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               if (images.length >= 2)
                                 SizedBox(
                                   height:
@@ -274,7 +274,7 @@ class HomeBody extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(width: 20),
+                        const SizedBox(width: 20),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,

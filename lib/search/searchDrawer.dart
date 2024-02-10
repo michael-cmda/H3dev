@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:h3devs/search/recentSearchTile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SearchDrawer extends StatefulWidget {
-  const SearchDrawer({super.key});
+  const SearchDrawer({Key? key}) : super(key: key);
 
   @override
   State<SearchDrawer> createState() => _SearchDrawerState();
 }
 
 class _SearchDrawerState extends State<SearchDrawer> {
+  final TextEditingController _searchController = TextEditingController();
   final List<String> recentSearches = ['H3 Devs', 'Yikes', 'John Doe'];
 
   @override
@@ -41,6 +43,10 @@ class _SearchDrawerState extends State<SearchDrawer> {
           ),
           const SizedBox(height: 20),
           TextField(
+            controller: _searchController,
+            onChanged: (value) {
+              setState(() {});
+            },
             decoration: InputDecoration(
               hintText: 'Search',
               prefixIcon: const Padding(
@@ -65,6 +71,8 @@ class _SearchDrawerState extends State<SearchDrawer> {
               ),
             ),
           ),
+          SizedBox(height: 20),
+          _buildUserList(),
         ],
       ),
     );
@@ -110,5 +118,73 @@ class _SearchDrawerState extends State<SearchDrawer> {
         ],
       ),
     );
+  }
+
+  Widget _buildUserList() {
+    return _searchController.text.isEmpty
+        ? SizedBox()
+        : StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .where('name', isGreaterThanOrEqualTo: _searchController.text)
+                .where('name', isLessThan: _searchController.text + '\uf8ff')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              var users = snapshot.data!.docs;
+              List<Widget> userWidgets = [];
+
+              if (users.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No search results found.',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                );
+              }
+
+              for (var userDoc in users) {
+                var userData = userDoc.data() as Map<String, dynamic>;
+                var userName = userData['name'];
+                var userEmail = userData['email'];
+                var profilePictureUrl = userData['profilePictureUrl'];
+
+                var userWidget = ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: profilePictureUrl != null
+                        ? NetworkImage(profilePictureUrl)
+                        : Image.asset('assets/images/Default.jpg').image,
+                  ),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(userName),
+                    ],
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(userEmail),
+                    ],
+                  ),
+                  onTap: () {},
+                );
+                userWidgets.add(userWidget);
+              }
+
+              return ListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                children: userWidgets,
+              );
+            },
+          );
   }
 }

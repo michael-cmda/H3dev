@@ -433,35 +433,56 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<void> _signInWithGoogle() async {
-    try {
-      await _googleSignIn.signIn();
-      // Add logic for successful Google sign-in
-      _redirectToNewPage();
-      print('Google Sign-In Successful. User: ${_googleSignIn.currentUser}');
-    } catch (error) {
-      print('Google Sign-In Error: $error');
-      // Handle error
-    }
-  }
+ Future<void> _signInWithGoogle() async {
+  try {
+    final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+      final UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? user = authResult.user;
 
-  // Implement the Facebook login method
-  Future<void> _signInWithFacebook() async {
-    try {
-      final LoginResult result = await _facebookAuth.login();
-      if (result.status == LoginStatus.success) {
-        // Add logic for successful Facebook login
+      if (user != null) {
         _redirectToNewPage();
-        print('Facebook Login Successful. Token: ${result.accessToken?.token}');
+        print('Google Sign-In Successful. User: $user');
       } else {
-        // Handle error
-        print('Facebook Login Error: ${result.message}');
+        print('Google Sign-In Failed.');
       }
-    } catch (error) {
-      print('Facebook Login Error: $error');
-      // Handle error
     }
+  } catch (error) {
+    print('Google Sign-In Error: $error');
   }
+}
+
+
+Future<void> _signInWithFacebook() async {
+  try {
+    final LoginResult result = await FacebookAuth.instance.login();
+
+    if (result.status == LoginStatus.success) {
+      final AccessToken accessToken = result.accessToken!;
+      final AuthCredential credential = FacebookAuthProvider.credential(accessToken.token);
+
+      final UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? user = authResult.user;
+
+      if (user != null) {
+        _redirectToNewPage();
+        print('Facebook Login Successful. User: $user');
+      } else {
+        print('Facebook Login Failed.');
+      }
+    } else {
+      print('Facebook Login Cancelled.');
+    }
+  } catch (error) {
+    print('Facebook Login Error: $error');
+  }
+}
+
 
   // ...
 
@@ -490,7 +511,7 @@ void _showAgreementDialog(BuildContext context) {
           children: [
             Padding(
               padding: EdgeInsets.only(bottom: 15),
-              child: Text('Sure naka ani?'),
+              child: Text('.............'),
             ),
           ],
         ),

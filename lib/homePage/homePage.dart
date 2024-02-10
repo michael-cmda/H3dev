@@ -50,9 +50,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (querySnapshot.docs.isNotEmpty) {
       final docId = querySnapshot.docs.first.id;
-      _fetchName(docId); // Pass the retrieved document ID
+      _fetchName(docId); 
     } else {
-      // Handle the case where no user document matches the UID
+
       debugPrint('User document not found in Firestore.');
     }
   }
@@ -67,7 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
         _currentUserName = data?['name'];
       });
     } else {
-      // Handle the case where the user document doesn't exist
       debugPrint('User document does not exist in Firestore.');
     }
   }

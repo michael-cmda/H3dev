@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:h3devs/createPost/createPost.dart';
+import 'package:h3devs/discover/discover.dart';
 import 'package:h3devs/homePage/homePage.dart';
 import 'package:h3devs/messages/screens/messages.dart';
 import 'package:h3devs/notification/notificationDrawer.dart';
+import 'package:h3devs/search/searchDrawer.dart';
 
 class MyDesktopBody extends StatelessWidget {
   const MyDesktopBody({Key? key}) : super(key: key);
@@ -13,68 +15,70 @@ class MyDesktopBody extends StatelessWidget {
     return const Scaffold(
       backgroundColor: Color.fromARGB(255, 243, 243, 243),
       body: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              // Second column (assuming YourWidget2 is a widget you want to position)
-              Stack(
-                children: [
-                  Positioned(
-                    child: Sidebar(),
-                    // Adjust the position as needed
-                  ),
-                ],
-              ),
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            // Second column (assuming YourWidget2 is a widget you want to position)
+            Stack(
+              children: [
+                Positioned(
+                  child: Sidebar(),
+                  // Adjust the position as needed
+                ),
+              ],
+            ),
 
-              // First column
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      // youtube video
-                      Positioned(
-                        child: HighlightCategory(),
-                      ),
+            // First column
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    // youtube video
+                    Positioned(
+                      child: HighlightCategory(),
+                    ),
 
-                      // comment section & recommended videos
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 16.0),
-                          child: Column(
-                            children: [
-                              // youtube video
-                              Positioned(
-                                child: HomeBody(),
-                              ),
+                    // comment section & recommended videos
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 16.0),
+                        child: Column(
+                          children: [
+                            // youtube video
+                            Positioned(
+                              child: HomeBody(),
+                            ),
 
-                              // comment section & recommended videos
-                            ],
-                          ),
+                            // comment section & recommended videos
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              // Third column
-              Stack(
-                children: [
-                  // Positioned widget for YourWidget4
-                  Column(
-                    children: [
-                      Positioned(child: HomeProfileWidget()
-                          // Adjust the position as needed for YourWidget4
-                          ),
-                      Positioned(child: HomeMessagesWidget()),
-                    ],
-                  ),
+            ),
+            // Third column
+            Stack(
+              children: [
+                // Positioned widget for YourWidget4
+                Column(
+                  children: [
+                    Positioned(child: HomeProfileWidget()
+                        // Adjust the position as needed for YourWidget4
+                        ),
+                    Positioned(child: HomeMessagesWidget()),
+                  ],
+                ),
 
-                  // Another Positioned widget for YourWidget5 under YourWidget4
-                ],
-              ),
-            ],
-          )),
+                // Another Positioned widget for YourWidget5 under YourWidget4
+              ],
+            ),
+          ],
+        ),
+      ),
+      drawer: SearchDrawer(),
     );
   }
 }
@@ -313,7 +317,12 @@ class Sidebar extends StatelessWidget {
               ),
               const SizedBox(height: 6.0),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Discover()));
+                },
                 child: const ListTile(
                   minLeadingWidth: 30,
                   title: Text('Discover'),

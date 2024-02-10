@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:h3devs/createPost/createPost.dart';
 import 'package:h3devs/discover/discover.dart';
 import 'package:h3devs/homePage/homePage.dart';
+import 'package:h3devs/latestNews/latestNews.dart';
 import 'package:h3devs/messages/screens/messages.dart';
 import 'package:h3devs/notification/notificationDrawer.dart';
 import 'package:h3devs/search/searchDrawer.dart';
@@ -91,34 +92,95 @@ BoxDecoration buildBoxDecoration() {
 }
 
 class HighlightCategory extends StatelessWidget {
-  const HighlightCategory({super.key});
+  const HighlightCategory({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    if (screenHeight >= 580) {
-      return Container(
-        height: MediaQuery.of(context).size.height * 0.25,
-        decoration: buildBoxDecoration(),
-        padding: const EdgeInsets.all(20.0),
-        child: const AspectRatio(
-          aspectRatio: 16 / 2,
-          child: Text(
-            'Highlight',
-            style: TextStyle(
-              color: Color.fromARGB(255, 5, 5, 5),
-              fontWeight: FontWeight.bold,
-              fontSize: 25, // Adjust font size as needed
-            ),
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('listings').snapshots(),
+      builder: (context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        if (!snapshot.hasData ||
+            snapshot.data == null ||
+            snapshot.data!.docs.isEmpty) {
+          return SizedBox.shrink(); // No data found
+        }
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0), // Rounded border
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 3,
+                offset: Offset(0, 2), // changes position of shadow
+              ),
+            ],
           ),
-        ),
-      );
-    } else {
-      // Provide a default return statement
-      return const SizedBox
-          .shrink(); // You can use SizedBox.shrink() or any other widget here.
-    }
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Highlight',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 5, 5, 5),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25, // Adjust font size as needed
+                ),
+              ),
+              SizedBox(height: 10),
+              SizedBox(
+                height:
+                    MediaQuery.of(context).size.height * 0.15, // Reduced height
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    final document = snapshot.data!.docs[index];
+                    final data = document.data();
+                    final List<dynamic>? images = data!['images'];
+
+                    if (images == null || images.isEmpty) {
+                      return SizedBox.shrink(); // Skip if no images
+                    }
+
+                    int maxImagesToShow = 5;
+                    double itemWidth =
+                        MediaQuery.of(context).size.width / maxImagesToShow;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: SizedBox(
+                        width: itemWidth < 100
+                            ? itemWidth
+                            : 100, // Set a minimum width of 100
+                        child: ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(10.0), // Rounded border
+                          child: Image.network(
+                            images[0], // Fetching only the first image
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -157,45 +219,97 @@ class HomeBody extends StatelessWidget {
               }
 
               return Container(
-                height: MediaQuery.of(context).size.height * 0.635,
-                decoration: buildBoxDecoration(),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
                 padding: const EdgeInsets.all(20.0),
-                child: AspectRatio(
-                  aspectRatio: 16 / 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: images.length,
-                          itemBuilder: (context, index) {
-                            final imageUrl = images[index];
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  imageUrl,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  fit: BoxFit.cover,
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      description ?? '',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 5, 5, 5),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.35,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.width * 0.25,
+                                width: double.infinity,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: Image.network(
+                                    images[0],
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
-                            );
-                          },
+                              SizedBox(height: 10),
+                              if (images.length >= 2)
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  width: double.infinity,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Image.network(
+                                      images[1],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        description ?? '',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 5, 5, 5),
-                          fontWeight: FontWeight.bold,
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if (images.length > 2)
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  width: double.infinity,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Image.network(
+                                      images[2],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              if (images.length > 3)
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  width: double.infinity,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Image.network(
+                                      images[3],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ),
               );
             },
@@ -331,7 +445,13 @@ class Sidebar extends StatelessWidget {
               ),
               const SizedBox(height: 6.0),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => ListingImagesPage(),
+                    ),
+                  );
+                },
                 child: const ListTile(
                   minLeadingWidth: 30,
                   title: Text('Latest News'),

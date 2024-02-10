@@ -5,6 +5,7 @@ import 'package:h3devs/discover/discover.dart';
 import 'package:h3devs/homePage/homePage.dart';
 import 'package:h3devs/latestNews/latestNews.dart';
 import 'package:h3devs/messages/screens/messages.dart';
+import 'package:h3devs/messages/screens/recentMessages.dart';
 import 'package:h3devs/notification/notificationDrawer.dart';
 import 'package:h3devs/search/searchDrawer.dart';
 
@@ -366,8 +367,10 @@ class HomeMessagesWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(26.0),
             color: Colors.white,
           ),
-
-          // Add your child widget(s) here
+          child: const Padding(
+            padding: EdgeInsets.only(left: 16),
+            child: RecentMessages(),
+          ),
         ),
       );
     } else {
@@ -444,20 +447,20 @@ class Sidebar extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 6.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => ListingImagesPage(),
-                    ),
-                  );
-                },
-                child: const ListTile(
-                  minLeadingWidth: 30,
-                  title: Text('Latest News'),
-                  leading: Icon(Icons.new_releases),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     Navigator.of(context).pushReplacement(
+              //       MaterialPageRoute(
+              //         builder: (context) => ListingImagesPage(),
+              //       ),
+              //     );
+              //   },
+              //   child: const ListTile(
+              //     minLeadingWidth: 30,
+              //     title: Text('Latest News'),
+              //     leading: Icon(Icons.new_releases),
+              //   ),
+              // ),
               const SizedBox(height: 10.0),
               GestureDetector(
                 onTap: () {

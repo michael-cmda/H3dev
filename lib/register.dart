@@ -1,10 +1,9 @@
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -49,78 +48,118 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registration'),
+        title: Text(
+          'Registration',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ElevatedButton(
-                onPressed: pickImage,
-                child: Text('Select Image'),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Container(
+                height: double.infinity,
+                child: Image.asset('assets/images/phone.png'),
               ),
-              SizedBox(height: 12),
-              imageBytes != null
-                  ? GestureDetector(
-                      onTap: pickImage,
-                      child: Image.memory(
-                        imageBytes!,
-                        height: 100,
-                        width: 100,
-                        fit: BoxFit.cover,
+            ),
+            SizedBox(width: 16), 
+            Expanded(
+              flex: 2,
+              child: FractionallySizedBox(
+                widthFactor: 0.6, // Adjust this value as needed
+                child: Card(
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                   Center(
+  child: Text(
+    'Create your account',
+    style: TextStyle(
+      fontSize: 20, // Change the font size as needed
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+),
+                          SizedBox(height: 12),
+                          imageBytes != null
+                              ? GestureDetector(
+                                  onTap: pickImage,
+                                  child: SizedBox(
+                                    height: 200,
+                                    width: 200,
+                                    child: Image.memory(
+                                      imageBytes!,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  height: 100,
+                                  width: 100,
+                                  color: Colors.grey[200],
+                                  child: Icon(Icons.image, size: 100, color: Colors.grey),
+                                ),
+                          SizedBox(height: 12),
+                          ElevatedButton(
+                            onPressed: pickImage,
+                            child: Text('Select Image'),
+                          ),
+                          TextField(
+                            controller: nameController,
+                            decoration: InputDecoration(labelText: 'Name'),
+                          ),
+                          SizedBox(height: 12),
+                          TextField(
+                            controller: emailController,
+                            decoration: InputDecoration(labelText: 'Email'),
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          SizedBox(height: 12),
+                          TextField(
+                            controller: passwordController,
+                            decoration: InputDecoration(labelText: 'Password'),
+                            obscureText: true,
+                          ),
+                          SizedBox(height: 12),
+                          TextField(
+                            controller: confirmPasswordController,
+                            decoration: InputDecoration(labelText: 'Confirm Password'),
+                            obscureText: true,
+                          ),
+                          SizedBox(height: 12),
+                          TextField(
+                            controller: ageController,
+                            decoration: InputDecoration(labelText: 'Age'),
+                            keyboardType: TextInputType.number,
+                          ),
+                          SizedBox(height: 12),
+                          TextField(
+                            controller: addressController,
+                            decoration: InputDecoration(labelText: 'Address'),
+                            maxLines: null,
+                          ),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () async {
+                              await _registerUser();
+                            },
+                            child: Text('Register'),
+                          ),
+                        ],
                       ),
-                    )
-                  : Container(
-                      height: 100,
-                      width: 100,
-                      color: Colors.grey[200],
                     ),
-              SizedBox(height: 12),
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(labelText: 'Name'),
+                  ),
+                ),
               ),
-              SizedBox(height: 12),
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(labelText: 'Email'),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              SizedBox(height: 12),
-              TextField(
-                controller: passwordController,
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-              ),
-              SizedBox(height: 12),
-              TextField(
-                controller: confirmPasswordController,
-                decoration: InputDecoration(labelText: 'Confirm Password'),
-                obscureText: true,
-              ),
-              SizedBox(height: 12),
-              TextField(
-                controller: ageController,
-                decoration: InputDecoration(labelText: 'Age'),
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(height: 12),
-              TextField(
-                controller: addressController,
-                decoration: InputDecoration(labelText: 'Address'),
-                maxLines: null,
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  await _registerUser();
-                },
-                child: Text('Register'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -128,29 +167,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   Future<void> pickImage() async {
     try {
-      if (!kIsWeb) {
-        final pickedImage = await ImagePicker().pickImage(
-          source: ImageSource.gallery,
-        );
-        if (pickedImage != null) {
-          final imageBytes = await pickedImage.readAsBytes();
-          setState(() {
-            this.imageBytes = Uint8List.fromList(imageBytes);
-          });
-        }
-      } else {
-        final FilePickerResult? pickedImage =
-            await FilePicker.platform.pickFiles(
-          type: FileType.custom,
-          allowedExtensions: ['jpg', 'jpeg', 'png'],
-          allowMultiple: false,
-        );
-
-        if (pickedImage != null && pickedImage.files.isNotEmpty) {
-          setState(() {
-            imageBytes = pickedImage.files.single.bytes;
-          });
-        }
+      final pickedImage = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
+      if (pickedImage != null) {
+        final imageBytes = await pickedImage.readAsBytes();
+        setState(() {
+          this.imageBytes = Uint8List.fromList(imageBytes);
+        });
       }
     } catch (e) {
       print('Error picking image: $e');

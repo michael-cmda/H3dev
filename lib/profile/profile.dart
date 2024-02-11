@@ -13,14 +13,23 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage>
+    with SingleTickerProviderStateMixin {
   late User? _currentUser;
   Uint8List? _imageBytes;
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     _getCurrentUser();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   Future<void> _getCurrentUser() async {
@@ -160,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   child: IconButton(
                                                     onPressed: () {},
                                                     icon: const Icon(
-                                                        Icons.article),
+                                                        Icons.article_rounded),
                                                   ),
                                                 ),
                                                 const SizedBox(height: 14.0),
@@ -227,6 +236,28 @@ class _ProfilePageState extends State<ProfilePage> {
                             ],
                           ),
                         ),
+                        TabBar(
+                          controller: _tabController,
+                          tabs: const [
+                            Tab(icon: Icon(Icons.image), text: 'Posts'),
+                            Tab(
+                                icon: Icon(Icons.article_rounded),
+                                text: 'Articles'),
+                            Tab(icon: Icon(Icons.favorite), text: 'Favorites'),
+                          ],
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.black87,
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: const [
+                              PostsScreen(),
+                              ArticlesScreen(),
+                              FavoritesScreen(),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -236,6 +267,39 @@ class _ProfilePageState extends State<ProfilePage> {
           : const Center(
               child: CircularProgressIndicator(),
             ),
+    );
+  }
+}
+
+class PostsScreen extends StatelessWidget {
+  const PostsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('This is the Posts tab'),
+    );
+  }
+}
+
+class ArticlesScreen extends StatelessWidget {
+  const ArticlesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('This is the Articles tab'),
+    );
+  }
+}
+
+class FavoritesScreen extends StatelessWidget {
+  const FavoritesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('This is the Favorites tab'),
     );
   }
 }

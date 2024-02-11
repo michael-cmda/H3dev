@@ -213,9 +213,56 @@ class HomeBody extends StatelessWidget {
               final data = document.data();
               final List<dynamic>? images = data!['images'];
               final description = data['description'];
+              final documentId = document.id; // Get the document ID
 
               if (images == null || images.isEmpty) {
                 return SizedBox(); // Skip if no images
+              }
+
+              // Function to add a comment to Firestore
+              void addComment(String comment) {
+                FirebaseFirestore.instance
+                    .collection('comments')
+                    .doc(documentId)
+                    .collection('comments')
+                    .add({
+                  'comment': comment,
+                  'timestamp': Timestamp.now(),
+                });
+              }
+
+              // Function to delete a comment from Firestore
+              void deleteComment(String commentId) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Delete Comment"),
+                      content:
+                          Text("Are you sure you want to delete this comment?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            FirebaseFirestore.instance
+                                .collection('comments')
+                                .doc(documentId)
+                                .collection('comments')
+                                .doc(commentId)
+                                .delete();
+                            Navigator.pop(context);
+                          },
+                          child: Text("Delete"),
+                        ),
+                      ],
+                    );
+                  },
+                );
               }
 
               return Container(
@@ -228,85 +275,129 @@ class HomeBody extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      description ?? '',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 5, 5, 5),
-                        fontWeight: FontWeight.bold,
+                    SizedBox(
+                      height: MediaQuery.of(context).size.width * 0.35,
+                      width: double.infinity,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Image.network(
+                          images[0],
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     SizedBox(height: 10),
-                    Row(
+                    if (images.length >= 2)
+                      SizedBox(
+                        height: MediaQuery.of(context).size.width * 0.25,
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.network(
+                            images[1],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    SizedBox(height: 10),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.35,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.width * 0.25,
-                                width: double.infinity,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: Image.network(
-                                    images[0],
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              if (images.length >= 2)
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.2,
-                                  width: double.infinity,
-                                  child: ClipRRect(
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('comments')
+                              .doc(documentId)
+                              .collection('comments')
+                              .orderBy('timestamp', descending: true)
+                              .snapshots(),
+                          builder: (context,
+                              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                                  commentSnapshot) {
+                            if (commentSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                            if (commentSnapshot.hasError) {
+                              return Center(
+                                  child:
+                                      Text('Error: ${commentSnapshot.error}'));
+                            }
+                            if (!commentSnapshot.hasData ||
+                                commentSnapshot.data == null ||
+                                commentSnapshot.data!.docs.isEmpty) {
+                              return SizedBox();
+                            }
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children:
+                                  commentSnapshot.data!.docs.map((commentDoc) {
+                                final commentData = commentDoc.data();
+                                final commentText = commentData['comment'];
+                                final commentId = commentDoc.id;
+                                return Container(
+                                  padding: EdgeInsets.all(10.0),
+                                  margin: EdgeInsets.symmetric(vertical: 5.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
                                     borderRadius: BorderRadius.circular(10.0),
-                                    child: Image.network(
-                                      images[1],
-                                      fit: BoxFit.cover,
-                                    ),
                                   ),
-                                ),
-                            ],
-                          ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          commentText,
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          // Handle three-dot icon tap, e.g., delete comment
+                                          deleteComment(commentId);
+                                        },
+                                        child: Icon(Icons.more_vert),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          },
                         ),
-                        SizedBox(width: 20),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              if (images.length > 2)
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.2,
-                                  width: double.infinity,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    child: Image.network(
-                                      images[2],
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1.0,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                              ),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Write a comment...',
                                 ),
-                              if (images.length > 3)
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.2,
-                                  width: double.infinity,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    child: Image.network(
-                                      images[3],
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                            ],
+                                onSubmitted: (comment) {
+                                  // Call the function to add comment to Firestore
+                                  addComment(comment);
+                                },
+                              ),
+                            ),
                           ),
                         ),
+                        SizedBox(width: 10),
+                        Icon(Icons.favorite_border),
+                        SizedBox(width: 10),
+                        Icon(Icons.comment),
                       ],
                     ),
                   ],

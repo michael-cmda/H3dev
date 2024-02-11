@@ -270,33 +270,94 @@ class HomeBody extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(10.0),
                 margin: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SizedBox(
                       height: MediaQuery.of(context).size.width * 0.35,
-                      width: double.infinity,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: Image.network(
-                          images[0],
-                          fit: BoxFit.cover,
-                        ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                color: Colors.grey[200],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: Image.network(
+                                  images.length > 0 ? images[0] : '',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          Expanded(
+                            flex: 3,
+                            child: images.length > 1
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: Colors.grey[200],
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      child: Image.network(
+                                        images[1],
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 10),
-                    if (images.length >= 2)
+                    if (images.length > 2) SizedBox(height: 5),
+                    if (images.length > 2)
                       SizedBox(
                         height: MediaQuery.of(context).size.width * 0.25,
-                        width: double.infinity,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: Image.network(
-                            images[1],
-                            fit: BoxFit.cover,
-                          ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  color: Colors.grey[200],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: Image.network(
+                                    images[2],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 5),
+                            Expanded(
+                              child: images.length > 3
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        color: Colors.grey[200],
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        child: Image.network(
+                                          images[3],
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(),
+                            ),
+                          ],
                         ),
                       ),
                     SizedBox(height: 10),

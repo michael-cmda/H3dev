@@ -70,7 +70,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               flex: 2,
               child: Padding(
                 padding: const EdgeInsets.only(
-                  top: 120,
+                  top: 45,
                 ),
                 child: FractionallySizedBox(
                   widthFactor: 0.6, // Adjust this value as needed

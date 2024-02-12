@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LatestNews extends StatefulWidget {
   @override
@@ -13,6 +15,8 @@ class _LatestNewsState extends State<LatestNews> {
       'https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=';
 
   List<dynamic> newsArticles = [];
+
+  Set<int> favorites = Set<int>();
 
   Future<void> fetchNews() async {
     var response = await http.get(Uri.parse(apiUrl + apiKey));
@@ -31,6 +35,26 @@ class _LatestNewsState extends State<LatestNews> {
     fetchNews();
   }
 
+  void toggleFavorite(int index) {
+    setState(() {
+      if (favorites.contains(index)) {
+        favorites.remove(index);
+      } else {
+        favorites.add(index);
+      }
+    });
+    updateFavoritesInFirestore();
+  }
+
+  void updateFavoritesInFirestore() async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      await FirebaseFirestore.instance.collection('favorites').doc(userId).set({
+        'articles': favorites.toList(),
+      }, SetOptions(merge: true));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +67,25 @@ class _LatestNewsState extends State<LatestNews> {
           return Card(
             margin: EdgeInsets.all(8),
             child: ListTile(
-              title: Text(newsArticles[index]['title']),
+              title: Row(
+                children: [
+                  Expanded(
+                    child: Text(newsArticles[index]['title']),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      favorites.contains(index)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color:
+                          favorites.contains(index) ? Colors.red : Colors.grey,
+                    ),
+                    onPressed: () {
+                      toggleFavorite(index);
+                    },
+                  ),
+                ],
+              ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -57,8 +99,7 @@ class _LatestNewsState extends State<LatestNews> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                  if (newsArticles[index]['url'] !=
-                      null) // Check if URL is available
+                  if (newsArticles[index]['url'] != null)
                     TextButton(
                       onPressed: () {},
                       child: Text('Read more'),

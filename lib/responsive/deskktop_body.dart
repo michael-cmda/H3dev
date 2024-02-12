@@ -215,56 +215,9 @@ class HomeBody extends StatelessWidget {
               final data = document.data();
               final List<dynamic>? images = data!['images'];
               final description = data['description'];
-              final documentId = document.id; // Get the document ID
 
               if (images == null || images.isEmpty) {
                 return const SizedBox(); // Skip if no images
-              }
-
-              // Function to add a comment to Firestore
-              void addComment(String comment) {
-                FirebaseFirestore.instance
-                    .collection('comments')
-                    .doc(documentId)
-                    .collection('comments')
-                    .add({
-                  'comment': comment,
-                  'timestamp': Timestamp.now(),
-                });
-              }
-
-              // Function to delete a comment from Firestore
-              void deleteComment(String commentId) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Delete Comment"),
-                      content:
-                          Text("Are you sure you want to delete this comment?"),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("Cancel"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            FirebaseFirestore.instance
-                                .collection('comments')
-                                .doc(documentId)
-                                .collection('comments')
-                                .doc(commentId)
-                                .delete();
-                            Navigator.pop(context);
-                          },
-                          child: Text("Delete"),
-                        ),
-                      ],
-                    );
-                  },
-                );
               }
 
               return Container(
@@ -272,19 +225,19 @@ class HomeBody extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(20.0),
                 margin: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
                       description ?? '',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color.fromARGB(255, 5, 5, 5),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -305,7 +258,7 @@ class HomeBody extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               if (images.length >= 2)
                                 SizedBox(
                                   height:
@@ -322,7 +275,7 @@ class HomeBody extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(width: 20),
+                        const SizedBox(width: 20),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,

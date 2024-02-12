@@ -449,7 +449,7 @@ class Sidebar extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => MyHomePage(),
+                      builder: (context) => LatestNews(),
                     ),
                   );
                 },

@@ -303,7 +303,7 @@ class HomeBody extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        const Icon(Icons.favorite_border),
+                        Favorites(),
                         const SizedBox(width: 10),
                         const Icon(Icons.comment),
                       ],
@@ -315,6 +315,32 @@ class HomeBody extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class Favorites extends StatefulWidget {
+  @override
+  _MyWidgetState createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<Favorites> {
+  bool isFavorite = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        isFavorite ? Icons.favorite : Icons.favorite_border,
+        color: isFavorite
+            ? Colors.red
+            : null, // Set color to red when it's a favorite
+      ),
+      onPressed: () {
+        setState(() {
+          isFavorite = !isFavorite; // Toggle the favorite status
+        });
+      },
     );
   }
 }

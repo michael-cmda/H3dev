@@ -25,6 +25,11 @@ class _LatestNewsState extends State<LatestNews> {
     }
   }
 
+  // Function to handle navigation
+  void navigateToPreviousScreen(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +40,25 @@ class _LatestNewsState extends State<LatestNews> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Latest News'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Use Builder widget to get the correct context
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Row(
+          children: [
+            SizedBox(width: 8), // Adjust spacing as needed
+            Text(
+              'Latest News',
+              style: TextStyle(
+                color: Colors.black,
+                // You can add more text styling properties here if needed
+              ),
+            )
+          ],
+        ),
       ),
       body: ListView.builder(
         itemCount: newsArticles.length,

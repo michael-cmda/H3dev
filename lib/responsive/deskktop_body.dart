@@ -462,7 +462,7 @@ class HomeBody extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 10),
-                        Icon(Icons.favorite_border),
+                        Favorites(),
                         SizedBox(width: 10),
                         Icon(Icons.comment),
                       ],
@@ -603,7 +603,8 @@ class Sidebar extends StatelessWidget {
               const SizedBox(height: 6.0),
               GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pushReplacement(
+                  Navigator.push(
+                    context,
                     MaterialPageRoute(
                       builder: (context) => LatestNews(),
                     ),
@@ -702,5 +703,31 @@ class Sidebar extends StatelessWidget {
       return const SizedBox
           .shrink(); // You can use SizedBox.shrink() or any other widget here.
     }
+  }
+}
+
+class Favorites extends StatefulWidget {
+  @override
+  _MyWidgetState createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<Favorites> {
+  bool isFavorite = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        isFavorite ? Icons.favorite : Icons.favorite_border,
+        color: isFavorite
+            ? Colors.red
+            : null, // Set color to red when it's a favorite
+      ),
+      onPressed: () {
+        setState(() {
+          isFavorite = !isFavorite; // Toggle the favorite status
+        });
+      },
+    );
   }
 }

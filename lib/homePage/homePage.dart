@@ -50,9 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (querySnapshot.docs.isNotEmpty) {
       final docId = querySnapshot.docs.first.id;
-      _fetchName(docId); 
+      _fetchName(docId);
     } else {
-
       debugPrint('User document not found in Firestore.');
     }
   }
@@ -80,42 +79,49 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Image.asset('assets/images/logo-transparent.png',
-                height: 30.0, width: 30.0),
+            Image.asset(
+              'assets/images/logo-transparent.png',
+              height: 30.0,
+              width: 30.0,
+            ),
             const SizedBox(width: 8.0),
-            const Row(
-              children: [
-                Text(
-                  'CITY',
-                  style: TextStyle(color: Color(0xFF00008B)),
-                ),
-                SizedBox(
-                  width: 3.5,
-                ),
-                Text(
-                  'LOADS',
-                  style: TextStyle(
+            Visibility(
+              visible: screenWidth > 530,
+              child: Row(
+                children: [
+                  const Text(
+                    'CITY',
+                    style: TextStyle(color: Color(0xFF00008B)),
+                  ),
+                  const SizedBox(width: 3.5),
+                  const Text(
+                    'LOADS',
+                    style: TextStyle(
                       color: Color(0xFF00008B),
                       fontWeight: FontWeight.w600,
-                      letterSpacing: 1.5),
-                ),
-              ],
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ],
+              ),
             ),
+            Visibility(
+              visible: screenWidth < 520,
+              child: IconButton(
+                color: Colors.black,
+                icon: const Icon(Icons.view_headline_rounded),
+                onPressed: () {},
+              ),
+            ),
+            const Spacer(), // Spacer to push the following widgets to the right
           ],
         ),
         backgroundColor: Colors.white,
         actions: [
           Row(
             children: [
-              Visibility(
-                visible: screenWidth <= 800,
-                child: IconButton(
-                  color: Colors.black,
-                  icon: const Icon(Icons.view_headline_rounded),
-                  onPressed: () {},
-                ),
-              ),
               const SizedBox(width: 8.0),
               Visibility(
                 visible: screenWidth >= 700,

@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LatestNews extends StatefulWidget {
   @override
@@ -10,34 +8,24 @@ class LatestNews extends StatefulWidget {
 }
 
 class _LatestNewsState extends State<LatestNews> {
-  final String apiKey = '1c864ea3432d4523aca77b44cb905591';
-  final String apiUrl =
-      'https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=';
+  final String apiUrl = 'https://api.simplyrets.com/properties';
 
-  List<dynamic> newsArticles = [];
+  List<dynamic> properties = [];
 
   Set<int> favorites = Set<int>();
 
-  Future<void> fetchNews() async {
-    var response = await http.get(Uri.parse(apiUrl + apiKey));
+  Future<void> fetchProperties() async {
+    var response = await http.get(Uri.parse(apiUrl), headers: {
+      "Authorization":
+          "Basic " + base64Encode(utf8.encode("simplyrets:simplyrets"))
+    });
     if (response.statusCode == 200) {
       setState(() {
-        newsArticles = json.decode(response.body)['articles'];
+        properties = json.decode(response.body);
       });
     } else {
-      throw Exception('Failed to load news');
+      throw Exception('Failed to load properties');
     }
-  }
-
-  // Function to handle navigation
-  void navigateToPreviousScreen(BuildContext context) {
-    Navigator.of(context).pop();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchNews();
   }
 
   void toggleFavorite(int index) {
@@ -48,86 +36,56 @@ class _LatestNewsState extends State<LatestNews> {
         favorites.add(index);
       }
     });
-    updateFavoritesInFirestore();
   }
 
-  void updateFavoritesInFirestore() async {
-    String? userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId != null) {
-      await FirebaseFirestore.instance.collection('favorites').doc(userId).set({
-        'articles': favorites.toList(),
-      }, SetOptions(merge: true));
-    }
+  @override
+  void initState() {
+    super.initState();
+    fetchProperties();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            // Use Builder widget to get the correct context
-            Navigator.of(context).pop();
-          },
-        ),
-        title: Row(
-          children: [
-            SizedBox(width: 8), // Adjust spacing as needed
-            Text(
-              'Latest News',
-              style: TextStyle(
-                color: Colors.black,
-                // You can add more text styling properties here if needed
-              ),
-            )
-          ],
-        ),
+        title: Text('Latest Properties'),
       ),
       body: ListView.builder(
-        itemCount: newsArticles.length,
+        itemCount: properties.length,
         itemBuilder: (context, index) {
           return Card(
             margin: EdgeInsets.all(8),
             child: ListTile(
-              title: Row(
-                children: [
-                  Expanded(
-                    child: Text(newsArticles[index]['title']),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      favorites.contains(index)
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color:
-                          favorites.contains(index) ? Colors.red : Colors.grey,
-                    ),
-                    onPressed: () {
-                      toggleFavorite(index);
-                    },
-                  ),
-                ],
-              ),
+              title: Text(properties[index]['address']['full']),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(newsArticles[index]['description'] ?? ''),
-                  SizedBox(height: 8),
-                  if (newsArticles[index]['urlToImage'] != null)
-                    Container(
+                  Text('Price: \$${properties[index]['listPrice']}'),
+                  Text('Area: ${properties[index]['property']['area']} sqft'),
+                  Text(
+                      'Bedrooms: ${properties[index]['property']['bedrooms']}'),
+                  Text(
+                      'Bathrooms: ${properties[index]['property']['bathsFull']}'),
+                  if (properties[index]['photos'] != null &&
+                      properties[index]['photos'].isNotEmpty)
+                    Image.network(
+                      properties[index]['photos'][0],
                       height: 100,
-                      child: Image.network(
-                        newsArticles[index]['urlToImage'],
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  if (newsArticles[index]['url'] != null)
-                    TextButton(
-                      onPressed: () {},
-                      child: Text('Read more'),
+                      width: 100,
+                      fit: BoxFit.cover,
                     ),
                 ],
+              ),
+              trailing: IconButton(
+                icon: Icon(
+                  favorites.contains(index)
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  color: favorites.contains(index) ? Colors.red : Colors.grey,
+                ),
+                onPressed: () {
+                  toggleFavorite(index);
+                },
               ),
             ),
           );

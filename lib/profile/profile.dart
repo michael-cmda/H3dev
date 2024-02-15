@@ -294,12 +294,51 @@ class ArticlesScreen extends StatelessWidget {
 }
 
 class FavoritesScreen extends StatelessWidget {
-  const FavoritesScreen({super.key});
+  const FavoritesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('This is the Favorites tab'),
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('favorites')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .snapshots(),
+      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.data() == null) {
+          return Center(
+            child: Text('No favorites yet.'),
+          );
+        } else {
+          Map<String, dynamic> favoritesData =
+              snapshot.data!.data()! as Map<String, dynamic>;
+          List<dynamic> favoritesList = favoritesData['favorites'] ?? [];
+
+          if (favoritesList.isEmpty) {
+            return Center(
+              child: Text('You have no favorites selected.'),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: favoritesList.length,
+            itemBuilder: (context, index) {
+              Map<String, dynamic> favoriteItem = favoritesList[index];
+              return ListTile(
+                title: Text(favoriteItem['data']['address']['full']),
+                subtitle: Text('Price: \$${favoriteItem['data']['listPrice']}'),
+                trailing: IconButton(
+                  icon: Icon(Icons.favorite, color: Colors.red),
+                  onPressed: () {},
+                ),
+              );
+            },
+          );
+        }
+      },
     );
   }
 }

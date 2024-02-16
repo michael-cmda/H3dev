@@ -187,8 +187,11 @@ class _RealEstateFormState extends State<RealEstateForm> {
                                                       newValue!;
                                                 });
                                               },
-                                        items: <String>['Visa', 'PayPal']
-                                            .map<DropdownMenuItem<String>>(
+                                        items: <String>[
+                                          'Visa',
+                                          'Square',
+                                          'PayPal'
+                                        ].map<DropdownMenuItem<String>>(
                                           (String value) {
                                             return DropdownMenuItem<String>(
                                               value: value,
@@ -206,7 +209,10 @@ class _RealEstateFormState extends State<RealEstateForm> {
                                                             image: AssetImage(
                                                               value == 'Visa'
                                                                   ? 'assets/images/visa.png'
-                                                                  : 'assets/images/paypal.png',
+                                                                  : value ==
+                                                                          'Square'
+                                                                      ? 'assets/images/square.png'
+                                                                      : 'assets/images/paypal.png',
                                                             ),
                                                             fit: BoxFit.contain,
                                                           ),

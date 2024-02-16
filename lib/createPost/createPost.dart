@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+
+String _selectedPaymentMethod = 'Visa';
 
 class RealEstateForm extends StatefulWidget {
   @override
@@ -93,7 +94,7 @@ class _RealEstateFormState extends State<RealEstateForm> {
                                 SizedBox(height: 12.0),
                                 _buildLabeledTextField(
                                     'Location', _locationController),
-                                _buildImageSelector()
+                                _buildImageSelector(),
                               ],
                             ),
                           ),
@@ -137,6 +138,121 @@ class _RealEstateFormState extends State<RealEstateForm> {
                                   });
                                 }),
                                 _buildInteriorCheckbox(),
+                                Container(
+                                  margin: EdgeInsets.symmetric(vertical: 16.0),
+                                  padding: EdgeInsets.all(16.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Payment',
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      Text(
+                                        'Price for each post is \$5',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      SizedBox(height: 16.0),
+                                      Text(
+                                        'Please select payment method:',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      DropdownButton<String>(
+                                        value: _selectedPaymentMethod,
+                                        onChanged: _isSubmitting
+                                            ? null
+                                            : (String? newValue) {
+                                                setState(() {
+                                                  _selectedPaymentMethod =
+                                                      newValue!;
+                                                });
+                                              },
+                                        items: <String>['Visa', 'PayPal']
+                                            .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: SizedBox(
+                                                width: 120.0,
+                                                height: 40.0,
+                                                child: Stack(
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                        border: Border.all(
+                                                          color: Colors.grey,
+                                                          width: 1.0,
+                                                        ),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              value, // Use the value directly as the text
+                                                              style: TextStyle(
+                                                                fontSize: 14.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                height: 4.0),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Positioned.fill(
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        child: Image.asset(
+                                                          value == 'Visa'
+                                                              ? 'assets/images/logo.png'
+                                                              : 'assets/images/logo.png',
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ).toList(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 _isSubmitting
                                     ? CircularProgressIndicator()
                                     : Row(

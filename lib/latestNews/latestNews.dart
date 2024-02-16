@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LatestNews extends StatefulWidget {
   @override
@@ -13,6 +16,13 @@ class _LatestNewsState extends State<LatestNews> {
   List<dynamic> properties = [];
 
   Set<int> favorites = Set<int>();
+
+  Map<int, bool> clickedFavorites = {};
+
+  Future<User?> getCurrentUser() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    return user;
+  }
 
   Future<void> fetchProperties() async {
     var response = await http.get(Uri.parse(apiUrl), headers: {
@@ -28,20 +38,85 @@ class _LatestNewsState extends State<LatestNews> {
     }
   }
 
-  void toggleFavorite(int index) {
-    setState(() {
-      if (favorites.contains(index)) {
-        favorites.remove(index);
-      } else {
-        favorites.add(index);
+  Future<void> fetchFavorites() async {
+    User? user = await getCurrentUser();
+    if (user != null) {
+      String userId = user.uid;
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('favorites')
+          .doc(userId)
+          .get();
+      if (snapshot.exists) {
+        Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+        if (data != null) {
+          setState(() {
+            favorites.clear();
+            clickedFavorites.clear();
+            List<dynamic> favoritesData = data['favorites'] ?? [];
+            for (var favoriteData in favoritesData) {
+              var index = favoriteData['index'];
+              var clicked = favoriteData['clicked'] ?? false;
+              if (clicked) {
+                favorites.add(index);
+              }
+              clickedFavorites[index] = clicked;
+            }
+          });
+        }
       }
-    });
+    }
+  }
+
+  void toggleFavorite(int index) async {
+    print('Toggle favorite called for index: $index');
+    User? user = await getCurrentUser();
+    if (user != null) {
+      String userId = user.uid;
+      Map<String, dynamic> propertyData = properties[index];
+      bool isFavorite = favorites.contains(index);
+      setState(() {
+        if (isFavorite) {
+          favorites.remove(index);
+          clickedFavorites[index] = false;
+          FirebaseFirestore.instance
+              .collection('favorites')
+              .doc(userId)
+              .update({
+            'favorites': FieldValue.arrayRemove([
+              {
+                'index': index,
+                'data': propertyData,
+                'clicked': true,
+              }
+            ]),
+          });
+        } else {
+          favorites.add(index);
+          clickedFavorites[index] = true;
+          FirebaseFirestore.instance.collection('favorites').doc(userId).set(
+            {
+              'favorites': FieldValue.arrayUnion([
+                {
+                  'index': index,
+                  'data': propertyData,
+                  'clicked': true,
+                }
+              ]),
+            },
+            SetOptions(merge: true),
+          );
+        }
+      });
+    } else {
+      print('No user logged in.');
+    }
   }
 
   @override
   void initState() {
     super.initState();
     fetchProperties();
+    fetchFavorites();
   }
 
   @override
@@ -78,10 +153,11 @@ class _LatestNewsState extends State<LatestNews> {
               ),
               trailing: IconButton(
                 icon: Icon(
-                  favorites.contains(index)
-                      ? Icons.favorite
-                      : Icons.favorite_border,
-                  color: favorites.contains(index) ? Colors.red : Colors.grey,
+                  Icons.favorite,
+                  color: clickedFavorites.containsKey(index) &&
+                          clickedFavorites[index] == true
+                      ? Colors.red
+                      : Colors.grey,
                 ),
                 onPressed: () {
                   toggleFavorite(index);
@@ -95,7 +171,9 @@ class _LatestNewsState extends State<LatestNews> {
   }
 }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MaterialApp(
     home: LatestNews(),
   ));

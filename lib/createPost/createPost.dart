@@ -197,49 +197,23 @@ class _RealEstateFormState extends State<RealEstateForm> {
                                                 height: 40.0,
                                                 child: Stack(
                                                   children: [
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10.0),
-                                                        border: Border.all(
-                                                          color: Colors.grey,
-                                                          width: 1.0,
-                                                        ),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              value, // Use the value directly as the text
-                                                              style: TextStyle(
-                                                                fontSize: 14.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                                height: 4.0),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
                                                     Positioned.fill(
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child: Image.asset(
-                                                          value == 'Visa'
-                                                              ? 'assets/images/logo.png'
-                                                              : 'assets/images/logo.png',
-                                                          fit: BoxFit.contain,
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          image:
+                                                              DecorationImage(
+                                                            image: AssetImage(
+                                                              value == 'Visa'
+                                                                  ? 'assets/images/visa.png'
+                                                                  : 'assets/images/paypal.png',
+                                                            ),
+                                                            fit: BoxFit.contain,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
                                                         ),
                                                       ),
                                                     ),

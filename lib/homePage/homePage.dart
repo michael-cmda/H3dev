@@ -89,14 +89,14 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(width: 8.0),
             Visibility(
               visible: screenWidth > 530,
-              child: Row(
+              child: const Row(
                 children: [
-                  const Text(
+                  Text(
                     'CITY',
                     style: TextStyle(color: Color(0xFF00008B)),
                   ),
-                  const SizedBox(width: 3.5),
-                  const Text(
+                  SizedBox(width: 3.5),
+                  Text(
                     'LOADS',
                     style: TextStyle(
                       color: Color(0xFF00008B),

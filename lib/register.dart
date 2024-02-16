@@ -46,6 +46,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -58,11 +60,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              flex: 2,
-              child: Container(
-                height: double.infinity,
-                child: Image.asset('assets/images/phone.png'),
+            Visibility(
+              visible: screenWidth >= 990,
+              child: Expanded(
+                flex: 2,
+                child: Container(
+                  height: double.infinity,
+                  child: Visibility(
+                    visible: screenWidth >= 990,
+                    child: Image.asset('assets/images/phone.png'),
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 16),

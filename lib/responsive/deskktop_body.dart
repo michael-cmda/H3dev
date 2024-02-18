@@ -658,6 +658,15 @@ class Sidebar extends StatelessWidget {
               ),
               const SizedBox(height: 6.0),
               GestureDetector(
+                onTap: () {},
+                child: const ListTile(
+                  minLeadingWidth: 30,
+                  title: Text('Notification'),
+                  leading: Icon(Icons.notifications),
+                ),
+              ),
+              const SizedBox(height: 6.0),
+              GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,

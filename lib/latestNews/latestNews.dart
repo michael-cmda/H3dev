@@ -125,11 +125,18 @@ class _LatestNewsState extends State<LatestNews> {
       appBar: AppBar(
         title: Text('Latest Properties'),
       ),
-      body: ListView.builder(
+      body: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 1.5,
+        ),
         itemCount: properties.length,
         itemBuilder: (context, index) {
           return Card(
             margin: EdgeInsets.all(8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
             child: ListTile(
               title: Text(properties[index]['address']['full']),
               subtitle: Column(
@@ -141,27 +148,37 @@ class _LatestNewsState extends State<LatestNews> {
                       'Bedrooms: ${properties[index]['property']['bedrooms']}'),
                   Text(
                       'Bathrooms: ${properties[index]['property']['bathsFull']}'),
+                  SizedBox(height: 15.0),
                   if (properties[index]['photos'] != null &&
                       properties[index]['photos'].isNotEmpty)
                     Image.network(
                       properties[index]['photos'][0],
-                      height: 100,
-                      width: 100,
+                      height: 365,
+                      width: 1020,
                       fit: BoxFit.cover,
                     ),
                 ],
               ),
-              trailing: IconButton(
-                icon: Icon(
-                  Icons.favorite,
-                  color: clickedFavorites.containsKey(index) &&
-                          clickedFavorites[index] == true
-                      ? Colors.red
-                      : Colors.grey,
-                ),
-                onPressed: () {
-                  toggleFavorite(index);
-                },
+              trailing: Column(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.favorite,
+                      color: clickedFavorites.containsKey(index) &&
+                              clickedFavorites[index] == true
+                          ? Colors.red
+                          : Colors.grey,
+                    ),
+                    onPressed: () {
+                      toggleFavorite(index);
+                    },
+                  ),
+                  SizedBox(height: 15.0),
+                  IconButton(
+                    icon: Icon(Icons.ios_share),
+                    onPressed: () {},
+                  ),
+                ],
               ),
             ),
           );

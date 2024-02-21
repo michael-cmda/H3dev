@@ -741,6 +741,7 @@ class _RealEstateFormState extends State<RealEstateForm> {
         'furnished': _isFurnishedChecked,
         'notFurnished': _isNotFurnishedChecked,
         'images': uploadedImageUrls,
+        'timestamp': FieldValue.serverTimestamp(), // Include timestamp field
       };
 
       await _firestore.collection('listings').add(data);

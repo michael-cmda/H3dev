@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:file_picker/file_picker.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -204,22 +205,36 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
     );
   }
-
-  Future<void> pickImage() async {
-    try {
-      final pickedImage = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-      );
+  
+Future<void> pickImage() async {
+  try {
+    if (!kIsWeb) {
+      final pickedImage =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         final imageBytes = await pickedImage.readAsBytes();
         setState(() {
-          this.imageBytes = Uint8List.fromList(imageBytes);
+          this.imageBytes = imageBytes;
         });
       }
-    } catch (e) {
-      print('Error picking image: $e');
+    } else {
+      final FilePickerResult? pickedImage =
+          await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['png'],
+        allowMultiple: false,
+      );
+
+      if (pickedImage != null && pickedImage.files.isNotEmpty) {
+        setState(() {
+          imageBytes = pickedImage.files.single.bytes;
+        });
+      }
     }
+  } catch (e) {
+    print('Error picking image: $e');
   }
+}
 
   Future<void> _registerUser() async {
     try {
@@ -292,16 +307,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return true;
   }
 
-  Future<String> _uploadImageToStorage() async {
-    if (imageBytes == null) return '';
+Future<String> _uploadImageToStorage() async {
+  if (imageBytes == null) return '';
 
-    Reference storageReference = FirebaseStorage.instance
-        .ref()
-        .child('profile_images/${DateTime.now().millisecondsSinceEpoch}');
+  Reference storageReference = FirebaseStorage.instance
+      .ref()
+      .child('profile_images/${DateTime.now().millisecondsSinceEpoch}.png');
 
-    UploadTask uploadTask = storageReference.putData(imageBytes!);
-    TaskSnapshot snapshot = await uploadTask.whenComplete(() {});
-    String downloadUrl = await snapshot.ref.getDownloadURL();
-    return downloadUrl;
-  }
+  UploadTask uploadTask = storageReference.putData(imageBytes!, SettableMetadata(contentType: 'image/png'));
+  TaskSnapshot snapshot = await uploadTask.whenComplete(() {});
+  String downloadUrl = await snapshot.ref.getDownloadURL();
+  return downloadUrl;
+}
 }

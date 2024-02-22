@@ -53,7 +53,9 @@ class MyDesktopBody extends StatelessWidget {
                               child: HomeBody(),
                             ),
 
-                            // comment section & recommended videos
+                            // Positioned(
+                            //   child: SharedPosts(),
+                            // ),
                           ],
                         ),
                       ),
@@ -182,6 +184,76 @@ class HighlightCategory extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class SharedPosts extends StatelessWidget {
+  const SharedPosts({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: StreamBuilder(
+        stream:
+            FirebaseFirestore.instance.collection('shared_posts').snapshots(),
+        builder: (context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (!snapshot.hasData ||
+              snapshot.data == null ||
+              snapshot.data!.docs.isEmpty) {
+            return SizedBox(); // No shared posts found
+          }
+
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              final document = snapshot.data!.docs[index];
+              final data = document.data();
+              final propertyData = data!['data'];
+              final propertyTitle = propertyData['title'];
+              final propertyPrice = propertyData['price'];
+              final propertyArea = propertyData['area'];
+              final propertyBedrooms = propertyData['bedrooms'];
+              final propertyBathrooms = propertyData['bathrooms'];
+              final propertyPhotos = propertyData['photos'];
+
+              return Card(
+                margin: EdgeInsets.all(8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: ListTile(
+                  title: Text(propertyTitle),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Price: \$${propertyPrice.toString()}'),
+                      Text('Area: ${propertyArea.toString()} sqft'),
+                      Text('Bedrooms: ${propertyBedrooms.toString()}'),
+                      Text('Bathrooms: ${propertyBathrooms.toString()}'),
+                      SizedBox(height: 15.0),
+                      if (propertyPhotos != null && propertyPhotos.isNotEmpty)
+                        Image.network(
+                          propertyPhotos[0],
+                          height: 365,
+                          width: 1020,
+                          fit: BoxFit.cover,
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

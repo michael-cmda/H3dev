@@ -263,12 +263,52 @@ class PostsScreen extends StatelessWidget {
 }
 
 class ArticlesScreen extends StatelessWidget {
-  const ArticlesScreen({super.key});
+  const ArticlesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('This is the Articles tab'),
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('shared_posts')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .snapshots(),
+      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.data() == null) {
+          return Center(
+            child: Text('No shared posts yet.'),
+          );
+        } else {
+          Map<String, dynamic> sharedPostsData =
+              snapshot.data!.data()! as Map<String, dynamic>;
+          List<dynamic> sharedPostsList = sharedPostsData['shared_posts'] ?? [];
+
+          if (sharedPostsList.isEmpty) {
+            return Center(
+              child: Text('You have no shared articles.'),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: sharedPostsList.length,
+            itemBuilder: (context, index) {
+              Map<String, dynamic> sharedPostItem = sharedPostsList[index];
+              return ListTile(
+                title: Text(sharedPostItem['data']['address']['full']),
+                subtitle:
+                    Text('Price: \$${sharedPostItem['data']['listPrice']}'),
+                trailing: IconButton(
+                  icon: Icon(Icons.share, color: Colors.blue),
+                  onPressed: () {},
+                ),
+              );
+            },
+          );
+        }
+      },
     );
   }
 }

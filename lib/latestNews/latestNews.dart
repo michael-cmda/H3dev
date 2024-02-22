@@ -15,9 +15,13 @@ class _LatestNewsState extends State<LatestNews> {
 
   List<dynamic> properties = [];
 
+  List<dynamic> sharedPosts = [];
+
   Set<int> favorites = Set<int>();
 
   Map<int, bool> clickedFavorites = {};
+
+  Map<int, bool> clickedShared = {};
 
   Future<User?> getCurrentUser() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -60,6 +64,35 @@ class _LatestNewsState extends State<LatestNews> {
                 favorites.add(index);
               }
               clickedFavorites[index] = clicked;
+            }
+          });
+        }
+      }
+    }
+  }
+
+  Future<void> fetchShared() async {
+    User? user = await getCurrentUser();
+    if (user != null) {
+      String userId = user.uid;
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('shared_posts')
+          .doc(userId)
+          .get();
+      if (snapshot.exists) {
+        Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+        if (data != null) {
+          setState(() {
+            sharedPosts.clear();
+            clickedShared.clear();
+            List<dynamic> sharedPostsData = data['shared_posts'] ?? [];
+            for (var sharedPostData in sharedPostsData) {
+              var index = sharedPostData['index'];
+              var clicked = sharedPostData['clicked'] ?? false;
+              if (clicked) {
+                sharedPosts.add(index);
+              }
+              clickedShared[index] = clicked;
             }
           });
         }
@@ -112,11 +145,57 @@ class _LatestNewsState extends State<LatestNews> {
     }
   }
 
+  void toggleShare(int index) async {
+    print('Toggle favorite called for index: $index');
+    User? user = await getCurrentUser();
+    if (user != null) {
+      String userId = user.uid;
+      Map<String, dynamic> propertyData = properties[index];
+      bool isShared = sharedPosts.contains(index);
+      setState(() {
+        if (isShared) {
+          sharedPosts.remove(index);
+          clickedShared[index] = false;
+          FirebaseFirestore.instance
+              .collection('shared_posts')
+              .doc(userId)
+              .update({
+            'shared_posts': FieldValue.arrayRemove([
+              {
+                'index': index,
+                'data': propertyData,
+                'clicked': true,
+              }
+            ]),
+          });
+        } else {
+          sharedPosts.add(index);
+          clickedShared[index] = true;
+          FirebaseFirestore.instance.collection('shared_posts').doc(userId).set(
+            {
+              'shared_posts': FieldValue.arrayUnion([
+                {
+                  'index': index,
+                  'data': propertyData,
+                  'clicked': true,
+                }
+              ]),
+            },
+            SetOptions(merge: true),
+          );
+        }
+      });
+    } else {
+      print('No user logged in.');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     fetchProperties();
     fetchFavorites();
+    fetchShared();
   }
 
   @override
@@ -173,10 +252,17 @@ class _LatestNewsState extends State<LatestNews> {
                       toggleFavorite(index);
                     },
                   ),
-                  SizedBox(height: 15.0),
                   IconButton(
-                    icon: Icon(Icons.ios_share),
-                    onPressed: () {},
+                    icon: Icon(
+                      Icons.ios_share,
+                      color: clickedShared.containsKey(index) &&
+                              clickedShared[index] == true
+                          ? Colors.blue // Customize the color as needed
+                          : Colors.grey,
+                    ),
+                    onPressed: () {
+                      toggleShare(index);
+                    },
                   ),
                 ],
               ),

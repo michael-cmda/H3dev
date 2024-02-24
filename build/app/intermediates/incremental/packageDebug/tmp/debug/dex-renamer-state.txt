@@ -1,0 +1,4 @@
+#Sun Feb 04 11:23:48 SGT 2024
+base.0=C\:\\Users\\caban\\Flutter_Projects\\H3dev\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
